@@ -192,10 +192,10 @@ serve(async (req) => {
 
   try {
     const { messages, currentTheme, currentLanguage } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
 
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
+    if (!GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY is not configured');
     }
 
     const lastMessage = messages[messages.length - 1]?.content?.toLowerCase() || '';
@@ -228,30 +228,36 @@ serve(async (req) => {
 
 Remember: Understand intent, not just keywords. Be helpful even with unclear questions.`;
 
-    console.log('Sending request to AI gateway...');
+    console.log('Sending request to Gemini API...');
     console.log('Messages count:', messages.length);
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    // Format messages for Gemini API
+    const geminiMessages = [
+      { role: 'user', parts: [{ text: systemMessage }] },
+      { role: 'model', parts: [{ text: 'Understood. I will act as the AI assistant for this developer portfolio.' }] },
+      ...messages.map((m: { role: string; content: string }) => ({
+        role: m.role === 'user' ? 'user' : 'model',
+        parts: [{ text: m.content }]
+      }))
+    ];
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemMessage },
-          ...messages.map((m: { role: string; content: string }) => ({
-            role: m.role,
-            content: m.content
-          }))
-        ],
+        contents: geminiMessages,
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 1024,
+        },
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('AI gateway error:', response.status, errorText);
+      console.error('Gemini API error:', response.status, errorText);
 
       if (response.status === 429) {
         return new Response(JSON.stringify({
@@ -265,13 +271,13 @@ Remember: Understand intent, not just keywords. Be helpful even with unclear que
         });
       }
 
-      throw new Error(`AI gateway error: ${response.status}`);
+      throw new Error(`Gemini API error: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log('AI response received');
+    console.log('Gemini response received');
 
-    const aiResponse = data.choices?.[0]?.message?.content ||
+    const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text ||
       (currentLanguage === 'ru'
         ? 'Извините, не смог обработать запрос. Попробуйте переформулировать вопрос.'
         : 'Sorry, I could not process your request. Please try rephrasing.');
