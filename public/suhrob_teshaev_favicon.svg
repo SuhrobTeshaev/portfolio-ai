@@ -1,0 +1,6 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="64" height="64" rx="14" fill="#0D1117"/>
+  <text x="32" y="42" font-size="28" font-family="'Fira Code','JetBrains Mono',Consolas,monospace" font-weight="700" text-anchor="middle">
+    <tspan fill="#EF9F27">st</tspan><tspan fill="#5F5E5A">$</tspan>
+  </text>
+</svg>

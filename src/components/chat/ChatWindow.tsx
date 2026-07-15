@@ -19,7 +19,7 @@ interface Message {
 export function ChatWindow() {
   const { language, setTheme, setLanguage, theme } = useThemeLanguage();
   const t = uiTranslations[language];
-  
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -63,10 +63,13 @@ export function ChatWindow() {
 
     try {
       const { data, error } = await supabase.functions.invoke('portfolio-chat', {
-        body: { 
+        body: {
           messages: [...messages, userMessage],
           currentTheme: theme,
           currentLanguage: language
+        },
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
         }
       });
 
@@ -80,7 +83,7 @@ export function ChatWindow() {
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Chat error:', error);
-      const errorMessage = language === 'ru' 
+      const errorMessage = language === 'ru'
         ? 'Произошла ошибка. Попробуйте ещё раз.'
         : 'An error occurred. Please try again.';
       setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
@@ -144,22 +147,22 @@ export function ChatWindow() {
                   <p className="text-sm text-muted-foreground text-center">
                     {t.greetingSubtitle}
                   </p>
-                  <SuggestedQuestions 
-                    questions={t.suggestedQuestions} 
+                  <SuggestedQuestions
+                    questions={t.suggestedQuestions}
                     onSelect={handleSuggestedQuestion}
                   />
                 </div>
               )}
-              
+
               {messages.map((message, index) => (
-                <ChatMessage 
-                  key={index} 
-                  role={message.role} 
+                <ChatMessage
+                  key={index}
+                  role={message.role}
                   content={message.content}
                   isLatest={index === messages.length - 1}
                 />
               ))}
-              
+
               {isLoading && <TypingIndicator />}
               <div ref={messagesEndRef} />
             </div>

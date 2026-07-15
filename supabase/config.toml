@@ -1,1 +1,7 @@
 project_id = "jpjvlesunvnmtebkfrrv"
+
+[functions.portfolio-chat]
+verify_jwt = false
+
+[functions.portfolio-contact]
+verify_jwt = false

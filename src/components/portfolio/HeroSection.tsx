@@ -1,16 +1,24 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Mail, Github, Linkedin, Send } from 'lucide-react';
+import { MapPin, Mail, Github, Linkedin, Send, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { portfolioData } from '@/lib/portfolioData';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
+import { getTotalExperience } from '@/lib/dateUtils';
 
 export function HeroSection() {
   const { language } = useThemeLanguage();
   const data = portfolioData;
 
+  const totalExperience = getTotalExperience(data.experience, language);
+
+  const dynamicSummary = language === 'ru'
+    ? `Frontend и Mobile разработчик с ${totalExperience} опыта. ${data.summary.ru}`
+    : `Frontend & Mobile Developer with ${totalExperience} of experience. ${data.summary.en}`;
+
   return (
     <section className="min-h-[70vh] flex items-center justify-center py-20">
-      <div className="container max-w-4xl mx-auto px-6">
+      <div className="container w-full max-w-[1200px] mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -62,19 +70,50 @@ export function HeroSection() {
             transition={{ delay: 0.6 }}
             className="text-muted-foreground max-w-2xl mx-auto leading-relaxed"
           >
-            {data.summary[language]}
+            {dynamicSummary}
           </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
+          >
+            <Button 
+              size="lg" 
+              className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform duration-200 flex items-center justify-center gap-2" 
+              asChild
+            >
+              <a href={data.telegram} target="_blank" rel="noopener noreferrer">
+                <Send className="w-5 h-5" />
+                <span>{language === 'ru' ? 'Написать мне' : 'Contact me'}</span>
+              </a>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="w-full sm:w-auto border-primary/30 hover:border-primary text-foreground hover:bg-primary/10 hover:scale-[1.02] transition-transform duration-200 flex items-center justify-center gap-2" 
+              asChild
+            >
+              <a href="/SuhrobTeshaevCV.png" download="SuhrobTeshaevCV.png">
+                <Download className="w-5 h-5" />
+                <span>{language === 'ru' ? 'Скачать резюме' : 'Download CV'}</span>
+              </a>
+            </Button>
+          </motion.div>
 
           {/* Social Links */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
+            transition={{ delay: 0.8 }}
             className="flex items-center justify-center gap-4 pt-4"
           >
             <a
               href={`mailto:${data.email}`}
-              className="w-10 h-10 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors duration-200"
+              className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110" style={{background: 'var(--glass-bg)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1px solid var(--glass-border)', boxShadow: 'var(--glass-shadow)'}}
               aria-label="Email"
             >
               <Mail className="w-5 h-5" />
@@ -83,25 +122,30 @@ export function HeroSection() {
               href={`https://${data.github}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors duration-200"
+              className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110" style={{background: 'var(--glass-bg)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1px solid var(--glass-border)', boxShadow: 'var(--glass-shadow)'}}
               aria-label="GitHub"
             >
               <Github className="w-5 h-5" />
             </a>
             <a
-              href={`https://${data.linkedin}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors duration-200"
+              href={`https://...`}
+              onClick={(e) => {
+                e.preventDefault();
+                const el = document.getElementById('contact');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110" style={{background: 'var(--glass-bg)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1px solid var(--glass-border)', boxShadow: 'var(--glass-shadow)'}}
               aria-label="LinkedIn"
             >
               <Linkedin className="w-5 h-5" />
             </a>
             <a
-              href={`https://t.me/${data.telegram.replace('@', '')}`}
+              href={data.telegram}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors duration-200"
+              className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110" style={{background: 'var(--glass-bg)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1px solid var(--glass-border)', boxShadow: 'var(--glass-shadow)'}}
               aria-label="Telegram"
             >
               <Send className="w-5 h-5" />

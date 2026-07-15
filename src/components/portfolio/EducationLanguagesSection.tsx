@@ -9,8 +9,8 @@ export function EducationLanguagesSection() {
   const t = uiTranslations[language];
 
   return (
-    <section className="py-16 bg-secondary/30">
-      <div className="container max-w-4xl mx-auto px-6">
+    <section id="education" className="py-16 ">
+      <div className="container w-full max-w-[1200px] mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-12">
           {/* Education */}
           <motion.div
@@ -32,7 +32,7 @@ export function EducationLanguagesSection() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="card-elevated p-4"
+                  className="glass-card p-4"
                 >
                   <h3 className="font-semibold text-foreground">{edu.degree}</h3>
                   <p className="text-primary text-sm">{edu.institution}</p>

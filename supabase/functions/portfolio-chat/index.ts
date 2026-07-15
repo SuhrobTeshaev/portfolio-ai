@@ -1,189 +1,99 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
+// Get allowed origin from environment, default to localhost for development
+const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') || 'http://localhost:8080';
+
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
+
+// Simple in-memory rate limiter (in production, use Supabase or Redis)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+function checkRateLimit(clientIp: string, maxRequests = 5, windowMs = 60000): { allowed: boolean; remaining: number } {
+  const now = Date.now();
+  const record = rateLimitMap.get(clientIp);
+
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(clientIp, { count: 1, resetTime: now + windowMs });
+    return { allowed: true, remaining: maxRequests - 1 };
+  }
+
+  if (record.count >= maxRequests) {
+    return { allowed: false, remaining: 0 };
+  }
+
+  record.count++;
+  return { allowed: true, remaining: maxRequests - record.count };
+}
+
+function getClientIp(req: Request): string {
+  return req.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown';
+}
 
 const portfolioContext = `
 # AI Assistant for Developer Portfolio
 
-You are a smart, friendly AI assistant representing a developer. You help HR managers, recruiters, and potential employers learn about the developer. 
+You are a smart, friendly AI assistant representing Teshazoda Suhrob (Frontend & Mobile Developer). 
+
+## YOUR PRIMARY MISSION:
+1. Help users learn about Suhrob's skills, projects, and experience.
+2. **DETECT PROJECT REQUESTS**: If a user describes a project they want to build (e.g., "I want an app for...", "I need a website that..."), you MUST generate a detailed Technical Specification (TZ).
 
 ## CRITICAL RULES:
-1. ALWAYS understand the USER'S INTENT, not just keywords
-2. If a question is unclear, make reasonable assumptions based on context
-3. Provide helpful, relevant answers even for creatively phrased questions
-4. Be conversational and professional
-5. Respond in the SAME LANGUAGE the user writes in
+1. ALWAYS understand the USER'S INTENT.
+2. Respond in the SAME LANGUAGE the user writes in.
+3. If the user asks about something else (like weather), be polite and helpful, but try to bring the conversation back to the portfolio naturally if possible.
+
+## PROJECT REQUEST HANDLING (LEAD GENERATION):
+If the user describes a project:
+1. Start with "TECHNICAL SPECIFICATION GENERATED" (this is a signal for the system).
+2. Create a clear, detailed TZ (Техническое задание) including:
+   - Project Overview
+   - Recommended Technology Stack (Suhrob specializes in React, Next.js, Kotlin, Flutter)
+   - Suggested Libraries and Tools
+   - Potential Optimizations
+   - Deployment Recommendations
+3. Tell the user: "I've generated a technical specification for your project and sent it directly to Suhrob. He will review it and get back to you soon!"
 
 ## DEVELOPER PROFILE:
-
-### Basic Info:
-- Full Name: Тешазода Сухроб (Teshazoda Suhrob)
-- Title: Frontend & Mobile Developer
-- Experience: 2 years in software development (started January 2024)
-- Location: Душанбе, Таджикистан (Dushanbe, Tajikistan)
-- Email: suhrob.teshazoda@example.com
-- GitHub: github.com/suhrob-teshazoda
-- LinkedIn: linkedin.com/in/suhrob-teshazoda
-- Telegram: @suhrob_dev
-
-### Professional Summary:
-Frontend and Mobile Developer with 2 years of experience building web and Android applications. Specializing in React, Next.js, Vue.js and native Kotlin development. Working with Flutter for cross-platform development. Focused on production-ready solutions with emphasis on stability and post-release support. Experience with full development cycle including Google Play publishing.
-
-### Technical Skills:
-
-**Frontend (Strong):**
-- React.js - 8/10 (2 years experience, multiple production apps)
-- Next.js - 8/10 (modern web applications)
-- Vue.js - 7/10 (ICAP medical website and other projects)
-- TypeScript - 7/10 (type-safe development)
-- JavaScript (ES6+) - 8/10 (solid foundation)
-- HTML/CSS - 8/10 (responsive design)
-
-**Mobile (Strong):**
-- Android (Kotlin) - 8/10 (native Android development, Навбат app)
-- Flutter - 8/10 (Asar cinema platform, cross-platform apps)
-- HLS - 7/10 (video streaming)
-- MediaCodec - 7/10 (video processing)
-- Google Play Publishing - 8/10 (full publishing cycle)
-
-**Backend & CMS (Intermediate):**
-- Laravel - 7/10 (Навбат clinic system, SMS Target)
-- PHP - 7/10 (backend development)
-- WordPress - 7/10 (business websites, real estate sites)
-- MySQL - 7/10 (database design)
-- REST API - 8/10 (integration and development)
-
-**UI Libraries:**
-- MUI - 7/10 (Material UI components)
-- Tailwind CSS - 8/10 (utility-first CSS)
-- Framer Motion - 7/10 (animations)
-
-**Tools & Practices:**
-- Git - 8/10 (version control)
-- JWT - 7/10 (authentication)
-- VS Code - 9/10 (primary IDE)
-- Postman - 8/10 (API testing)
-- Figma - 6/10 (design collaboration)
-
-### Work Experience:
-
-**1. Livo (January 2024 - Present)**
-Role: Frontend & Mobile Developer
-Duration: ~1 year
-Achievements:
-- Developed web applications using React and Next.js
-- Built Android applications with Kotlin
-- Worked with Flutter for cross-platform development
-- Integrated REST APIs and implemented JWT authentication
-- Full cycle of publishing applications to Google Play
-- Error handling and production debugging
-- Technologies: React, Next.js, Vue.js, Kotlin, Flutter, TypeScript, Supabase
-
-**2. BOBO Web Studio (October 2023 - December 2023)**
-Role: Frontend Developer Intern
-Duration: 3 months
-Achievements:
-- Internship at web studio
-- Developed user interfaces using React and Vue.js
-- Worked with UI libraries (MUI)
-- Responsive component design
-- Backend API integration
-- Technologies: JavaScript, React, Vue.js, HTML/CSS, MUI
-
-### Languages Spoken:
-1. Tajik - Native speaker (родной язык)
-2. Russian - Fluent (свободный)
-3. English - Intermediate, B1 level (can read documentation, basic communication)
-
-### Education:
-Bachelor's Degree in Information Technology - Tajik Technical University (2019-2023)
-
-### Notable Projects:
-
-**1. Навбат - Clinic Management System**
-- Description: Comprehensive clinic management system for dental clinics and laboratories
-- Features: Admin panel for partners with modules for laboratory, dental card, tests, finances, transactions, clients, appointments, schedules, charts. Web portal for client self-booking and Kotlin mobile app
-- My Role: Full-stack development (Laravel backend + Kotlin mobile app)
-- Technologies: Laravel, Kotlin, PHP, MySQL, JavaScript, Android
-- Scale: Multi-functional admin panel with complete clinic workflow
-
-**2. Asar - Cinema Platform**
-- Description: Cinema streaming platform built with Flutter
-- Features: HLS video streaming, quality switching, MediaCodec integration
-- My Role: Mobile development and video streaming implementation
-- Technologies: Flutter, Kotlin, HLS, MediaCodec, REST API
-- Published: Full cycle to Google Play
-
-**3. Diary/Book Editor Platform**
-- Description: Web platform for creating books with customizable covers, paper, and fonts
-- Features: Full-featured Word-like editor with multiple tools, PDF export capability, separate admin panel
-- My Role: Frontend development with Next.js
-- Technologies: Next.js, React, TypeScript, Supabase, PDF Generation
-
-**4. SMS Target - Bulk SMS Service**
-- Description: Platform for mass SMS campaigns with advanced filtering
-- Features: Multiple telecom operator integrations, campaign management, analytics
-- My Role: Backend development with Laravel
-- Technologies: PHP, Laravel, MySQL, REST API, JavaScript
-
-**5. ICAP - Medical Website**
-- Description: Medical website with service information and patient portal
-- Features: Appointment booking, patient personal cabinet
-- My Role: Frontend development with Vue.js
-- Technologies: Vue.js, JavaScript, HTML/CSS, REST API
-
-**6. Real Estate & Business Websites**
-- Description: Multiple WordPress projects including real estate sites, corporate websites, landing pages
-- Features: Responsive design, SEO optimization, forms and CRM integration
-- My Role: WordPress development and customization
-- Technologies: WordPress, PHP, JavaScript, HTML/CSS, MySQL
-- Projects: Real estate platforms, business sites, landing pages, corporate websites
-
-### Interests & Hobbies:
-- Learning new technologies and frameworks
-- Mobile app development
-- Video streaming technologies
-- Contributing to real production projects
-
-### Availability:
-- Open to: Full-time positions, contract work
-- Preferred: Remote or on-site in Dushanbe
-- Current status: Employed at Livo, open to opportunities
-
-## QUESTION UNDERSTANDING GUIDE:
-
-Understand these variations mean the same thing:
-- "опыт/experience/работал/делал/чем занимался" → Work experience
-- "умеешь/знаешь/технологии/стек/скиллы/навыки" → Technical skills
-- "проекты/портфолио/что делал/примеры работ" → Projects
-- "языки/говоришь/english/английский" → Languages spoken
-- "образование/учился/универ/диплом" → Education
-- "контакты/связаться/телеграм/почта" → Contact info
-- "свободен/ищешь/нанять/доступность" → Availability
-- "кто ты/расскажи о себе/познакомься" → Introduction
-
-## SPECIAL COMMANDS:
-
-### Theme Control:
-If user mentions: темн*, dark, ночн* → Change to dark theme
-If user mentions: светл*, light, дневн*, белый → Change to light theme
-
-### Language Control:
-If user mentions: english, англ*, по-английски → Switch to English
-If user mentions: русск*, russian, по-русски → Switch to Russian
-
-When executing commands, confirm the action naturally in conversation.
-
-## RESPONSE STYLE:
-- Be concise but complete
-- Use bullet points for lists
-- Include specific numbers and facts
-- Be enthusiastic but professional
-- If unsure about something, admit it but try to help
+- Name: Тешазода Сухроб (Teshazoda Suhrob)
+- Role: Frontend & Mobile Developer
+- Experience: 2 years (React, Next.js, Vue, Kotlin, Flutter)
+- Location: Dushanbe, Tajikistan
+- Telegram: https://t.me/suhrobdev
+- Projects: Навбат (Clinic System), Asar (Cinema Platform), Diary/Book Editor, SMS Target, ICAP Medical.
 `;
+
+async function sendTelegramNotification(message: string) {
+  const token = Deno.env.get('TELEGRAM_BOT_TOKEN');
+  const chatId = Deno.env.get('TELEGRAM_CHAT_ID');
+
+  if (!token || !chatId) {
+    console.error('Telegram credentials missing');
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message,
+        parse_mode: 'HTML'
+      })
+    });
+
+    if (!response.ok) {
+      console.error('Telegram API error:', await response.text());
+    }
+  } catch (err) {
+    console.error('Failed to send Telegram notification:', err);
+  }
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -191,7 +101,70 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, currentTheme, currentLanguage } = await req.json();
+    // Check rate limit
+    const clientIp = getClientIp(req);
+    const rateLimitCheck = checkRateLimit(clientIp, 5, 60000);
+
+    if (!rateLimitCheck.allowed) {
+      return new Response(JSON.stringify({
+        error: 'Rate limit exceeded. Please try again in a minute.',
+      }), {
+        status: 429,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Parse and validate input
+    let requestData: any;
+    try {
+      requestData = await req.json();
+    } catch (e) {
+      return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { messages, currentTheme, currentLanguage } = requestData;
+
+    // Validate required fields
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return new Response(JSON.stringify({ error: 'Invalid or empty messages' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Validate each message
+    for (const msg of messages) {
+      if (!msg.role || !msg.content || typeof msg.content !== 'string') {
+        return new Response(JSON.stringify({ error: 'Invalid message format' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      if (msg.content.length > 2000) {
+        return new Response(JSON.stringify({ error: 'Message too long (max 2000 chars)' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
+    // Validate theme and language
+    if (!['light', 'dark'].includes(currentTheme)) {
+      return new Response(JSON.stringify({ error: 'Invalid theme' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    if (!['ru', 'en'].includes(currentLanguage)) {
+      return new Response(JSON.stringify({ error: 'Invalid language' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
 
     if (!GEMINI_API_KEY) {
@@ -199,98 +172,112 @@ serve(async (req) => {
     }
 
     const lastMessage = messages[messages.length - 1]?.content?.toLowerCase() || '';
-
     let action = null;
 
-    // Theme detection with more patterns
+    // Theme and Language detection
     const darkPatterns = ['темн', 'dark', 'ночн', 'чёрн', 'черн'];
     const lightPatterns = ['светл', 'light', 'дневн', 'бел', 'яркий'];
     const englishPatterns = ['english', 'англ', 'по-английски', 'in english'];
     const russianPatterns = ['русск', 'russian', 'по-русски', 'на русском'];
 
-    if (darkPatterns.some(p => lastMessage.includes(p)) && (lastMessage.includes('тем') || lastMessage.includes('theme') || lastMessage.includes('режим') || lastMessage.includes('смен'))) {
+    if (darkPatterns.some(p => lastMessage.includes(p)) && (lastMessage.includes('тем') || lastMessage.includes('theme'))) {
       action = { type: 'theme', value: 'dark' };
-    } else if (lightPatterns.some(p => lastMessage.includes(p)) && (lastMessage.includes('тем') || lastMessage.includes('theme') || lastMessage.includes('режим') || lastMessage.includes('смен'))) {
+    } else if (lightPatterns.some(p => lastMessage.includes(p)) && (lastMessage.includes('тем') || lastMessage.includes('theme'))) {
       action = { type: 'theme', value: 'light' };
-    } else if (englishPatterns.some(p => lastMessage.includes(p)) && (lastMessage.includes('язык') || lastMessage.includes('switch') || lastMessage.includes('говор') || lastMessage.includes('перекл') || lastMessage.includes('сменить'))) {
+    } else if (englishPatterns.some(p => lastMessage.includes(p)) && (lastMessage.includes('язык') || lastMessage.includes('switch'))) {
       action = { type: 'language', value: 'en' };
-    } else if (russianPatterns.some(p => lastMessage.includes(p)) && (lastMessage.includes('язык') || lastMessage.includes('switch') || lastMessage.includes('говор') || lastMessage.includes('перекл'))) {
+    } else if (russianPatterns.some(p => lastMessage.includes(p)) && (lastMessage.includes('язык') || lastMessage.includes('switch'))) {
       action = { type: 'language', value: 'ru' };
     }
 
-    // Build conversation with context
     const systemMessage = `${portfolioContext}
 
 ## CURRENT STATE:
-- Website theme: ${currentTheme}
-- Website language: ${currentLanguage}
-- If theme/language change was requested, confirm it was done.
+- Theme: ${currentTheme}
+- Language: ${currentLanguage}
+- If theme/language change was requested, confirm it.
 
-Remember: Understand intent, not just keywords. Be helpful even with unclear questions.`;
+Remember: Be concise, technical where needed, and ALWAYS helpful.`;
 
-    console.log('Sending request to Gemini API...');
-    console.log('Messages count:', messages.length);
-
-    // Format messages for Gemini API
     const geminiMessages = [
       { role: 'user', parts: [{ text: systemMessage }] },
-      { role: 'model', parts: [{ text: 'Understood. I will act as the AI assistant for this developer portfolio.' }] },
-      ...messages.map((m: { role: string; content: string }) => ({
+      { role: 'model', parts: [{ text: 'Understood. I am Teshazoda Suhrob\'s AI assistant. I will handle portfolio info and generate technical specifications for project requests.' }] },
+      ...messages.map((m: any) => ({
         role: m.role === 'user' ? 'user' : 'model',
         parts: [{ text: m.content }]
       }))
     ];
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: geminiMessages,
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 1024,
-        },
-      }),
-    });
+    const models = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro'];
+    let response;
+    let lastError;
+    let usedModel;
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Gemini API error:', response.status, errorText);
+    for (const model of models) {
+      try {
+        console.log(`Attempting to use model: ${model}`);
+        // gemini-1.5 models use v1beta, gemini-pro uses v1
+        const apiVersion = model.includes('1.5') ? 'v1beta' : 'v1';
+        const url = `https://generativelanguage.googleapis.com/${apiVersion}/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
 
-      if (response.status === 429) {
-        return new Response(JSON.stringify({
-          error: 'Rate limit exceeded. Please try again in a moment.',
-          response: currentLanguage === 'ru'
-            ? 'Слишком много запросов. Подождите немного и попробуйте снова.'
-            : 'Too many requests. Please wait a moment and try again.'
-        }), {
-          status: 429,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: geminiMessages,
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 1500,
+            },
+          }),
         });
-      }
 
-      throw new Error(`Gemini API error: ${response.status}`);
+        if (response.ok) {
+          usedModel = model;
+          break;
+        } else {
+          const errorText = await response.text();
+          console.warn(`Model ${model} (${apiVersion}) failed with status ${response.status}: ${errorText}`);
+          lastError = { status: response.status, text: errorText };
+        }
+      } catch (err) {
+        console.warn(`Network/Unexpected error with model ${model}:`, err);
+        lastError = { status: 500, text: String(err) };
+      }
+    }
+
+    if (!response || !response.ok) {
+      console.error('All Gemini models failed. Last error:', lastError);
+      const status = lastError?.status || 500;
+      const errorMsg = lastError?.text || 'Unknown error';
+
+      return new Response(JSON.stringify({
+        error: `All AI models failed. Last error: ${status} - ${errorMsg}`,
+        response: currentLanguage === 'ru'
+          ? `Извините, сейчас серверы перегружены. Попробуйте позже.`
+          : `Sorry, servers are currently overloaded. Please try again later.`
+      }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     const data = await response.json();
-    console.log('Gemini response received');
+    const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-    const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      (currentLanguage === 'ru'
-        ? 'Извините, не смог обработать запрос. Попробуйте переформулировать вопрос.'
-        : 'Sorry, I could not process your request. Please try rephrasing.');
+    // Detect TZ and notify Suhrob
+    if (aiResponse.includes('TECHNICAL SPECIFICATION GENERATED')) {
+      const tzContent = aiResponse.split('TECHNICAL SPECIFICATION GENERATED')[1]?.trim();
+      const notificationText = `<b>🚀 New Project Request!</b>\n\n<b>User message:</b>\n<i>${messages[messages.length - 1]?.content}</i>\n\n<b>Generated TZ:</b>\n${tzContent}`;
+      await sendTelegramNotification(notificationText);
+    }
 
-    return new Response(JSON.stringify({ response: aiResponse, action }), {
+    return new Response(JSON.stringify({ response: aiResponse.replace('TECHNICAL SPECIFICATION GENERATED', '').trim(), action }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Chat error:', error);
-    return new Response(JSON.stringify({
-      error: error instanceof Error ? error.message : 'Unknown error',
-      response: 'Произошла ошибка. Пожалуйста, попробуйте ещё раз.'
-    }), {
+    return new Response(JSON.stringify({ error: error.message || String(error) }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

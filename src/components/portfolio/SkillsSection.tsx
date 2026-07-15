@@ -9,8 +9,8 @@ export function SkillsSection() {
   const t = uiTranslations[language];
 
   return (
-    <section className="py-16 bg-secondary/30">
-      <div className="container max-w-4xl mx-auto px-6">
+    <section id="skills" className="py-16">
+      <div className="container w-full max-w-[1200px] mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -30,7 +30,7 @@ export function SkillsSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="card-elevated p-6"
+                className="glass-card p-6"
               >
                 <h3 className="text-lg font-semibold mb-4 text-primary">{category.category}</h3>
                 <div className="flex flex-wrap gap-2">

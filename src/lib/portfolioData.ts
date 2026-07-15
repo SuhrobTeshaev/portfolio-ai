@@ -13,7 +13,8 @@ export interface PortfolioData {
   experience: {
     company: string;
     role: string;
-    period: string;
+    startDate: string;
+    endDate?: string;
     description: {
       ru: string;
       en: string;
@@ -36,6 +37,14 @@ export interface PortfolioData {
     degree: string;
     period: string;
   }[];
+  certificates?: {
+    name: string;
+    issuer: string;
+    platform: string;
+    date: string;
+    image?: string;
+    fileUrl?: string;
+  }[];
   projects: {
     name: string;
     description: {
@@ -44,6 +53,10 @@ export interface PortfolioData {
     };
     technologies: string[];
     link?: string;
+    github?: string;
+    image?: string;
+    mobileImage?: string;
+    logo?: string;
   }[];
 }
 
@@ -51,19 +64,19 @@ export const portfolioData: PortfolioData = {
   name: "Тешазода Сухроб",
   title: "Frontend & Mobile Developer",
   location: "Душанбе, Таджикистан",
-  email: "suhrob.teshazoda@example.com",
-  github: "github.com/suhrob-teshazoda",
+  email: "suhrobtesha@gmail.com",
+  github: "github.com/SuhrobTeshaev",
   linkedin: "linkedin.com/in/suhrob-teshazoda",
-  telegram: "@suhrob_dev",
+  telegram: "https://t.me/suhrobdev",
   summary: {
-    ru: "Frontend и Mobile разработчик с 2 годами опыта создания веб-приложений и Android приложений. Специализируюсь на React, Next.js, Vue.js и нативной разработке на Kotlin. Работаю с Flutter для кроссплатформенной разработки. Ориентирован на создание продакшен-решений с фокусом на стабильность и поддержку после релиза.",
-    en: "Frontend & Mobile Developer with 2 years of experience building web and Android applications. Specializing in React, Next.js, Vue.js and native Kotlin development. Working with Flutter for cross-platform development. Focused on production-ready solutions with emphasis on stability and post-release support."
+    ru: "Frontend и Mobile разработчик, специализируюсь на React, Next.js, Vue.js и нативной разработке на Kotlin. Работаю с Flutter для кроссплатформенной разработки. Ориентирован на создание продакшен-решений с фокусом на стабильность и поддержку после релиза.",
+    en: "Frontend & Mobile Developer specializing in React, Next.js, Vue.js and native Kotlin development. Working with Flutter for cross-platform development. Focused on production-ready solutions with emphasis on stability and post-release support."
   },
   experience: [
     {
       company: "Livo",
       role: "Frontend & Mobile Developer",
-      period: "Январь 2024 - Настоящее время",
+      startDate: "2024-03-01",
       description: {
         ru: "Разработка веб-приложений на React и Next.js. Создание Android приложений на Kotlin. Работа с Flutter для кроссплатформенной разработки. Интеграция REST API, работа с JWT авторизацией и обработка ошибок. Полный цикл публикации приложений в Google Play.",
         en: "Development of web applications using React and Next.js. Building Android applications with Kotlin. Working with Flutter for cross-platform development. REST API integration, JWT authentication and error handling. Full cycle of publishing apps to Google Play."
@@ -73,7 +86,8 @@ export const portfolioData: PortfolioData = {
     {
       company: "BOBO Web Studio",
       role: "Frontend Developer Intern",
-      period: "Октябрь 2023 - Декабрь 2023",
+      startDate: "2024-01-01",
+      endDate: "2024-03-01",
       description: {
         ru: "Стажировка в веб-студии. Разработка пользовательских интерфейсов с использованием React и Vue.js. Работа с UI-библиотеками (MUI). Вёрстка адаптивных компонентов. Интеграция с backend API.",
         en: "Internship at web studio. Development of user interfaces using React and Vue.js. Working with UI libraries (MUI). Responsive component design. Backend API integration."
@@ -110,59 +124,113 @@ export const portfolioData: PortfolioData = {
   ],
   education: [
     {
-      institution: "Таджикский Технический Университет",
-      degree: "Бакалавр Информационных Технологий",
-      period: "2019 - 2023"
+      institution: "Томский политехнический Университет",
+      degree: "Электроэнергетика и электротехника (Системы и сети)",
+      period: "2017 - 2021"
+    }
+  ],
+  certificates: [
+    {
+      name: "Version Control",
+      issuer: "Meta / Coursera",
+      platform: "Coursera",
+      date: "2026",
+      image: "/git.png"
+    },
+    {
+      name: "Meta Front-End Developer Professional Certificate",
+      issuer: "Meta / Coursera",
+      platform: "Coursera",
+      date: "2024",
+      image: "/certificates/meta-front-end.jpg",
+      fileUrl: "/certificates/meta-front-end.pdf"
+    },
+    {
+      name: "IT Support Professional Certificate",
+      issuer: "Google / Coursera",
+      platform: "Coursera",
+      date: "2023",
+      image: "/certificates/google-it-support.jpg",
+      fileUrl: "/certificates/google-it-support.pdf"
     }
   ],
   projects: [
     {
-      name: "Навбат - Clinic Management System",
+      name: "Navbat - Clinic Management System",
       description: {
-        ru: "Многофункциональная система управления клиниками. Админ-панель для партнёров с модулями: лаборатория, карточка зубов, анализы, финансы, транзакции, клиенты, запись, расписание, графики. Веб-портал для самостоятельной записи клиентов и мобильное приложение на Kotlin.",
-        en: "Comprehensive clinic management system. Admin panel for partners with modules: laboratory, dental card, tests, finances, transactions, clients, appointments, schedules, charts. Web portal for client self-booking and Kotlin mobile app."
+        ru: "Комплексная система управления клиниками. Админка для партнёров (React), клиентский вебсайт (Next.js), лендинг (Next.js) и клиентское мобильное приложение на Kotlin.",
+        en: "Comprehensive clinic management system. Partner admin panel (React), client website (Next.js), landing page (Next.js), and client mobile app built with Kotlin."
       },
-      technologies: ["Laravel", "Kotlin", "PHP", "MySQL", "JavaScript", "Android"]
+      technologies: ["React", "Next.js", "Kotlin", "TypeScript", "Tailwind CSS"],
+      link: "https://navbat.tj",
+      logo: "/navbat.png"
     },
     {
-      name: "Asar - Cinema Platform",
+      name: "Asarfilm - Cinema Platform",
       description: {
-        ru: "Кино-платформа на Flutter с поддержкой HLS стриминга, переключением качества видео и работой с MediaCodec. Полный цикл публикации в Google Play.",
-        en: "Cinema platform built with Flutter featuring HLS streaming, video quality switching and MediaCodec integration. Full Google Play publishing cycle."
+        ru: "Мобильное приложение кино-платформы на Flutter с поддержкой HLS стриминга, переключением качества видео и работой с MediaCodec.",
+        en: "Mobile cinema platform app built with Flutter featuring HLS streaming, video quality switching and MediaCodec integration."
       },
-      technologies: ["Flutter", "Kotlin", "HLS", "MediaCodec", "REST API"]
+      technologies: ["Flutter", "Dart", "HLS", "MediaCodec", "REST API"],
+      mobileImage: "/AsarMobile.webp",
+      image: "/AsarSteps.webp"
     },
     {
-      name: "Diary/Book Editor Platform",
+      name: "DearyDiary - Book Editor Platform",
       description: {
-        ru: "Веб-платформа для создания книг с выбором обложки, бумаги, шрифтов. Полноценный редактор как Word с множеством инструментов. Возможность экспорта в PDF. Отдельная админ-панель для управления.",
-        en: "Web platform for book creation with cover, paper, and font selection. Full-featured Word-like editor with multiple tools. PDF export capability. Separate admin panel."
+        ru: "Вебсайт для написания книг с выбором обложки, бумаги, шрифтов. Полноценный редактор (подобный Word) и генерация книги в PDF.",
+        en: "Website for writing books with cover, paper, and font selection. Full-featured Word-like editor and PDF generation."
       },
-      technologies: ["Next.js", "React", "TypeScript", "Supabase", "PDF Generation"]
+      image: "/deary.png",
+      technologies: ["Next.js", "React", "TypeScript", "PDF Generation"],
+      link: "https://dearydiary.world/",
     },
     {
-      name: "SMS Target - Bulk SMS Service",
+      name: "Livo - Corporate Website",
       description: {
-        ru: "Платформа массовой рассылки SMS с множеством фильтров и интеграцией нескольких операторов связи. Система управления кампаниями и аналитика.",
-        en: "Bulk SMS platform with advanced filtering and multiple telecom operator integrations. Campaign management and analytics system."
+        ru: "Корпоративный вебсайт, разработанный на Next.js.",
+        en: "Corporate website built with Next.js."
       },
-      technologies: ["PHP", "Laravel", "MySQL", "REST API", "JavaScript"]
+      image: "/livo.png",
+      technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+      link: "https://livo.tj"
     },
     {
-      name: "ICAP - Medical Website",
+      name: "smsTarget - Bulk SMS Service",
       description: {
-        ru: "Медицинский веб-сайт на Vue.js с информацией о услугах, записью на приём и личным кабинетом пациентов.",
-        en: "Medical website built with Vue.js featuring service information, appointment booking and patient portal."
+        ru: "Платформа массовой рассылки SMS. Система управления кампаниями, таргетинг и аналитика.",
+        en: "Bulk SMS platform. Campaign management system, targeting and analytics."
+      },
+      technologies: ["React.js", "JavaScript", "REST API", "HTML/CSS"],
+      link: "https://sms.colibri.tj",
+      image: "/targetHero.webp",
+      mobileImage: "/targetStartMobile.webp"
+    },
+    {
+      name: "ICAP",
+      description: {
+        ru: "Медицинский проект и портал, разработанный с использованием Vue.js.",
+        en: "Medical project and portal developed using Vue.js."
       },
       technologies: ["Vue.js", "JavaScript", "HTML/CSS", "REST API"]
     },
     {
-      name: "Real Estate & Business Websites",
+      name: "Insight Center",
       description: {
-        ru: "Разработка сайтов недвижимости, корпоративных сайтов, лендингов и бизнес-сайтов на WordPress. Адаптивная вёрстка, SEO-оптимизация, интеграция форм и CRM.",
-        en: "Development of real estate websites, corporate sites, landing pages and business websites using WordPress. Responsive design, SEO optimization, forms and CRM integration."
+        ru: "Сайт детской клиники на WordPress. Информация о различных процедурах (войта, логопедия и т.д.), адаптивный дизайн.",
+        en: "Children's clinic website on WordPress. Information about various procedures (Voita, speech therapy, etc.), responsive design."
       },
-      technologies: ["WordPress", "PHP", "JavaScript", "HTML/CSS", "MySQL"]
+      image: "/insight.png",
+      technologies: ["WordPress", "PHP", "HTML/CSS", "MySQL"],
+      link: "https://insightcenter.tj"
+    },
+    {
+      name: "Landing Pages & Admin Panels",
+      description: {
+        ru: "Множество небольших сайтов: от лендингов до админ-панелей, сайтов недвижимости и туристических платформ.",
+        en: "Multiple smaller websites: from landing pages to admin panels, real estate sites, and travel platforms."
+      },
+      technologies: ["React", "Vue.js", "WordPress", "HTML/CSS", "JavaScript"]
     }
   ]
 };
@@ -179,10 +247,13 @@ export const uiTranslations = {
     education: "Образование",
     languages: "Языки",
     contact: "Контакты",
+    certificates: "Сертификаты",
     present: "Настоящее время",
     themeChanged: "Тема изменена!",
     languageChanged: "Язык изменён!",
     askAnything: "Спросите что угодно о моём опыте, навыках или проектах",
+    showMore: "Показать еще",
+    showLess: "Свернуть",
     suggestedQuestions: [
       "Расскажи о своём опыте",
       "Какие технологии ты знаешь?",
@@ -202,10 +273,13 @@ export const uiTranslations = {
     education: "Education",
     languages: "Languages",
     contact: "Contact",
+    certificates: "Certificates",
     present: "Present",
     themeChanged: "Theme changed!",
     languageChanged: "Language changed!",
     askAnything: "Ask anything about my experience, skills, or projects",
+    showMore: "Show more",
+    showLess: "Show less",
     suggestedQuestions: [
       "Tell me about your experience",
       "What technologies do you know?",

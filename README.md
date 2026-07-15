@@ -1,73 +1,137 @@
-# Welcome to your Lovable project
+# Portfolio AI
 
-## Project info
+## Project overview
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+This is a personal portfolio website for Suhrob Teshazoda, built with Vite, React, TypeScript, Tailwind CSS, and shadcn-ui. It includes an AI chat assistant powered by Google Gemini that answers questions about skills, experience, and projects, and detects project requests to generate technical specifications.
 
-## How can I edit this code?
+## Local development
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Use your preferred IDE and Node.js to work on the project locally.
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Navigate to the project directory
+cd portfolio-ai
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Copy environment file and update with your keys
+cp .env.example .env
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Install dependencies
+npm install
+
+# Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Then open the local URL shown in the terminal (typically `http://localhost:8080`).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Environment Setup
 
-**Use GitHub Codespaces**
+Before running locally or deploying, you need to configure these environment variables in `.env`:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+**Frontend:**
+- `VITE_SUPABASE_URL` — Your Supabase project URL
+- `VITE_SUPABASE_PUBLISHABLE_KEY` — Your Supabase anonymous/public key
 
-## What technologies are used for this project?
+**Backend (Supabase Edge Functions):**
+- `GEMINI_API_KEY` — Get from [Google AI Studio](https://aistudio.google.com/app/apikeys)
+- `TELEGRAM_BOT_TOKEN` — Get from [@BotFather](https://t.me/BotFather) on Telegram
+- `TELEGRAM_CHAT_ID` — Your Telegram chat ID (where project leads will be notified)
+- `ALLOWED_ORIGIN` — Set to your domain (e.g., `https://portfolio.suhrob.dev`) or `http://localhost:8080` for dev
 
-This project is built with:
+### Security Note
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Never commit `.env` to version control. It is already in `.gitignore`. Keep your API keys safe.
 
-## How can I deploy this project?
+## Available scripts
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+- `npm run dev` — start the development server
+- `npm run build` — build the production bundle
+- `npm run preview` — preview the production build locally
+- `npm run lint` — run ESLint checks
 
-## Can I connect a custom domain to my Lovable project?
+## Technologies used
 
-Yes, you can!
+- **Frontend:** Vite, React, TypeScript, Tailwind CSS, shadcn-ui
+- **Backend:** Supabase Edge Functions (Deno)
+- **LLM:** Google Gemini API
+- **Database:** Supabase (PostgreSQL)
+- **Notifications:** Telegram Bot API
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Features
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- **AI Chat Assistant** — Ask about portfolio, skills, and experience
+- **Project Lead Detection** — Generates technical specifications when users describe projects
+- **Dark/Light Theme Toggle** — Theme preference persisted via context
+- **Multi-language Support** — Russian and English
+- **Responsive Design** — Optimized for mobile and desktop
+
+## Deployment
+
+### Frontend (Static Site)
+
+Build and deploy the `dist` folder:
+
+```sh
+npm run build
+```
+
+Then deploy with:
+- Vercel, Netlify, Firebase Hosting, or your own CDN
+- Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` as environment variables
+
+### Backend (Supabase Edge Functions)
+
+Deploy the Edge Function manually or via Supabase CLI:
+
+```sh
+supabase functions deploy portfolio-chat \
+  --env-file .env
+```
+
+Ensure these environment variables are set in Supabase project settings:
+- `GEMINI_API_KEY`
+- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_CHAT_ID`
+- `ALLOWED_ORIGIN`
+
+## Security & Rate Limiting
+
+- **CORS** is restricted to your domain (configurable via `ALLOWED_ORIGIN`)
+- **Rate Limiting** — 5 requests per 60 seconds per IP to prevent abuse and bill runup
+- **Input Validation** — All API inputs are validated to prevent injection attacks
+- **API Keys** — Backend keys are server-side only, not exposed to frontend
+
+## Architecture
+
+```
+portfolio-ai/
+├── src/                          # Frontend source
+│   ├── components/
+│   │   ├── portfolio/           # Portfolio sections
+│   │   ├── chat/                # Chat interface
+│   │   ├── layout/              # Header/Footer
+│   │   └── ui/                  # UI components (shadcn)
+│   ├── lib/
+│   │   └── portfolioData.ts     # Portfolio content & translations
+│   ├── contexts/
+│   │   └── ThemeLanguageContext # Theme & language state
+│   ├── integrations/
+│   │   └── supabase/            # Supabase client setup
+│   └── pages/                    # Route pages
+├── supabase/
+│   └── functions/
+│       └── portfolio-chat/      # Edge Function (chat handler)
+├── public/                       # Static assets
+└── .env.example                 # Environment variables template
+```
+
+## License
+
+This project is personal and for portfolio purposes.
+
+## Support
+
+For questions or issues, contact via Telegram [Suhrob](https://t.me/suhrobdev).
