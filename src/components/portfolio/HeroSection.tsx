@@ -97,7 +97,7 @@ export function HeroSection() {
               className="w-full sm:w-auto border-primary/30 hover:border-primary text-foreground hover:bg-primary/10 hover:scale-[1.02] transition-transform duration-200 flex items-center justify-center gap-2" 
               asChild
             >
-              <a href="/SuhrobTeshaevCV.png" download="SuhrobTeshaevCV.png">
+              <a href="/SuhrobTeshaevCV.pdf" download="SuhrobTeshaevCV.pdf">
                 <Download className="w-5 h-5" />
                 <span>{language === 'ru' ? 'Скачать резюме' : 'Download CV'}</span>
               </a>
