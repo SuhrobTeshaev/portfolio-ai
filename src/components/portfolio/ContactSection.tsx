@@ -133,7 +133,7 @@ export function ContactSection() {
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="glass-card gradient-border p-6 md:p-8"
+            className="glass-card gradient-border p-6 md:p-8 max-w-2xl mx-auto w-full"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Honeypot — hidden from humans, visible to bots */}

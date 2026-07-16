@@ -60,6 +60,16 @@ export interface PortfolioData {
   }[];
 }
 
+import gitImage from '../../public/git.png';
+import navbatImage from '../../public/navbat.png';
+import asarMobileImage from '../../public/AsarMobile.webp';
+import asarStepsImage from '../../public/AsarSteps.webp';
+import dearyImage from '../../public/deary.png';
+import livoImage from '../../public/livo.png';
+import targetHeroImage from '../../public/targetHero.webp';
+import targetStartMobileImage from '../../public/targetStartMobile.webp';
+import insightImage from '../../public/insight.png';
+
 export const portfolioData: PortfolioData = {
   name: "Тешазода Сухроб",
   title: "Frontend & Mobile Developer",
@@ -135,7 +145,7 @@ export const portfolioData: PortfolioData = {
       issuer: "Meta / Coursera",
       platform: "Coursera",
       date: "2026",
-      image: "/git.png"
+      image: gitImage
     },
     {
       name: "Meta Front-End Developer Professional Certificate",
@@ -163,7 +173,7 @@ export const portfolioData: PortfolioData = {
       },
       technologies: ["React", "Next.js", "Kotlin", "TypeScript", "Tailwind CSS"],
       link: "https://navbat.tj",
-      logo: "/navbat.png"
+      logo: navbatImage
     },
     {
       name: "Asarfilm - Cinema Platform",
@@ -172,8 +182,8 @@ export const portfolioData: PortfolioData = {
         en: "Mobile cinema platform app built with Flutter featuring HLS streaming, video quality switching and MediaCodec integration."
       },
       technologies: ["Flutter", "Dart", "HLS", "MediaCodec", "REST API"],
-      mobileImage: "/AsarMobile.webp",
-      image: "/AsarSteps.webp"
+      mobileImage: asarMobileImage,
+      image: asarStepsImage
     },
     {
       name: "DearyDiary - Book Editor Platform",
@@ -181,7 +191,7 @@ export const portfolioData: PortfolioData = {
         ru: "Вебсайт для написания книг с выбором обложки, бумаги, шрифтов. Полноценный редактор (подобный Word) и генерация книги в PDF.",
         en: "Website for writing books with cover, paper, and font selection. Full-featured Word-like editor and PDF generation."
       },
-      image: "/deary.png",
+      image: dearyImage,
       technologies: ["Next.js", "React", "TypeScript", "PDF Generation"],
       link: "https://dearydiary.world/",
     },
@@ -191,7 +201,7 @@ export const portfolioData: PortfolioData = {
         ru: "Корпоративный вебсайт, разработанный на Next.js.",
         en: "Corporate website built with Next.js."
       },
-      image: "/livo.png",
+      image: livoImage,
       technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
       link: "https://livo.tj"
     },
@@ -203,8 +213,8 @@ export const portfolioData: PortfolioData = {
       },
       technologies: ["React.js", "JavaScript", "REST API", "HTML/CSS"],
       link: "https://sms.colibri.tj",
-      image: "/targetHero.webp",
-      mobileImage: "/targetStartMobile.webp"
+      image: targetHeroImage,
+      mobileImage: targetStartMobileImage
     },
     {
       name: "ICAP",
@@ -220,7 +230,7 @@ export const portfolioData: PortfolioData = {
         ru: "Сайт детской клиники на WordPress. Информация о различных процедурах (войта, логопедия и т.д.), адаптивный дизайн.",
         en: "Children's clinic website on WordPress. Information about various procedures (Voita, speech therapy, etc.), responsive design."
       },
-      image: "/insight.png",
+      image: insightImage,
       technologies: ["WordPress", "PHP", "HTML/CSS", "MySQL"],
       link: "https://insightcenter.tj"
     },

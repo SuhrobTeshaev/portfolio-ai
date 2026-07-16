@@ -2,6 +2,7 @@ import React from 'react';
 import { Heart, Mail, Send } from 'lucide-react';
 import { portfolioData, uiTranslations } from '@/lib/portfolioData';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
+import logoUrl from '../../../public/suhrob_teshaev_header_transparent.svg';
 
 export function Footer() {
   const { language } = useThemeLanguage();
@@ -40,7 +41,7 @@ export function Footer() {
 
         <div className="pt-4 border-t border-border/40">
           <p className="text-muted-foreground text-base flex items-center justify-center gap-1">
-            Created by <img src="/suhrob_teshaev_header_transparent.svg" alt="Logo" className="w-32 h-16 object-contain" />
+            Created by <img src={logoUrl} alt="Logo" className="w-32 h-16 object-contain" />
           </p>
         </div>
       </div>

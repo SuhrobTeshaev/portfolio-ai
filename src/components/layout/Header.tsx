@@ -4,6 +4,7 @@ import { Sun, Moon, Globe, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { uiTranslations } from '@/lib/portfolioData';
+import logoUrl from '../../../public/suhrob_teshaev_header_transparent.svg';
 
 const navItems = [
   { id: 'experience', labelKey: 'experience' },
@@ -83,7 +84,7 @@ export function Header() {
           className="cursor-pointer flex items-center"
         >
           <img 
-            src="/suhrob_teshaev_header_transparent.svg" 
+            src={logoUrl} 
             alt="Suhrob Teshaev Logo" 
             className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 hover:scale-105 "
           />

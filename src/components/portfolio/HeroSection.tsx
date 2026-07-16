@@ -97,7 +97,13 @@ export function HeroSection() {
               className="w-full sm:w-auto border-primary/30 hover:border-primary text-foreground hover:bg-primary/10 hover:scale-[1.02] transition-transform duration-200 flex items-center justify-center gap-2" 
               asChild
             >
-              <a href="/SuhrobTeshaevCV.pdf" download="SuhrobTeshaevCV.pdf">
+              <a 
+                href={language === 'ru' 
+                  ? `${import.meta.env.BASE_URL}SuhrobTeshaevCV.pdf` 
+                  : `${import.meta.env.BASE_URL}SuhrobTeshaevCV_en.pdf`
+                } 
+                download={language === 'ru' ? 'SuhrobTeshaevCV.pdf' : 'SuhrobTeshaevCV_en.pdf'}
+              >
                 <Download className="w-5 h-5" />
                 <span>{language === 'ru' ? 'Скачать резюме' : 'Download CV'}</span>
               </a>
