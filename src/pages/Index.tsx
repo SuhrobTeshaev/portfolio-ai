@@ -13,32 +13,46 @@ import { ChatWindow } from '@/components/chat/ChatWindow';
 const SECTIONS = [
   {
     id: 'experience-lazy',
-    factory: () => import('@/components/portfolio/ExperienceSection').then(m => ({ default: m.ExperienceSection })),
+    factory: () =>
+      import('@/components/portfolio/ExperienceSection').then((m) => ({
+        default: m.ExperienceSection,
+      })),
     skeletonHeight: '520px',
   },
   {
     id: 'skills-lazy',
-    factory: () => import('@/components/portfolio/SkillsSection').then(m => ({ default: m.SkillsSection })),
+    factory: () =>
+      import('@/components/portfolio/SkillsSection').then((m) => ({ default: m.SkillsSection })),
     skeletonHeight: '360px',
   },
   {
     id: 'projects-lazy',
-    factory: () => import('@/components/portfolio/ProjectsSection').then(m => ({ default: m.ProjectsSection })),
+    factory: () =>
+      import('@/components/portfolio/ProjectsSection').then((m) => ({
+        default: m.ProjectsSection,
+      })),
     skeletonHeight: '680px',
   },
   {
     id: 'certificates-lazy',
-    factory: () => import('@/components/portfolio/CertificatesSection').then(m => ({ default: m.CertificatesSection })),
+    factory: () =>
+      import('@/components/portfolio/CertificatesSection').then((m) => ({
+        default: m.CertificatesSection,
+      })),
     skeletonHeight: '560px',
   },
   {
     id: 'education-lazy',
-    factory: () => import('@/components/portfolio/EducationLanguagesSection').then(m => ({ default: m.EducationLanguagesSection })),
+    factory: () =>
+      import('@/components/portfolio/EducationLanguagesSection').then((m) => ({
+        default: m.EducationLanguagesSection,
+      })),
     skeletonHeight: '380px',
   },
   {
     id: 'contact-lazy',
-    factory: () => import('@/components/portfolio/ContactSection').then(m => ({ default: m.ContactSection })),
+    factory: () =>
+      import('@/components/portfolio/ContactSection').then((m) => ({ default: m.ContactSection })),
     skeletonHeight: '440px',
   },
 ] as const;
@@ -54,11 +68,7 @@ const Index = () => (
 
         {/* All below-the-fold sections are code-split + intersection-lazy */}
         {SECTIONS.map(({ id, factory, skeletonHeight }) => (
-          <LazySection
-            key={id}
-            factory={factory}
-            skeletonHeight={skeletonHeight}
-          />
+          <LazySection key={id} factory={factory} skeletonHeight={skeletonHeight} />
         ))}
       </main>
 

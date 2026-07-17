@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  FolderGit2, 
-  Github, 
-  Globe, 
-  Activity, 
-  Film, 
-  BookOpen, 
-  MessageSquare, 
-  Building 
+import {
+  FolderGit2,
+  Github,
+  Globe,
+  Activity,
+  Film,
+  BookOpen,
+  MessageSquare,
+  Building,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { portfolioData, uiTranslations } from '@/lib/portfolioData';
@@ -26,7 +26,7 @@ export function ProjectsSection() {
 
   const handleToggleShow = () => {
     if (hasMore) {
-      setVisibleCount(prev => Math.min(prev + 2, projects.length));
+      setVisibleCount((prev) => Math.min(prev + 2, projects.length));
     } else {
       setVisibleCount(6);
       // Smooth scroll back to section top when collapsing
@@ -65,33 +65,50 @@ export function ProjectsSection() {
                 >
                   {/* Image / Fallback */}
                   {(project.image || project.mobileImage || project.logo) && !hasError ? (
-                    <div className="h-56 sm:h-64 overflow-hidden border-b border-white/10 flex-shrink-0 relative group-hover:bg-black/10 transition-colors duration-500" style={{background: 'linear-gradient(135deg, hsl(var(--primary) / 0.05), hsl(var(--accent) / 0.05))'}}>
-                      
+                    <div
+                      className="h-56 sm:h-64 overflow-hidden border-b border-white/10 flex-shrink-0 relative group-hover:bg-black/10 transition-colors duration-500"
+                      style={{
+                        background:
+                          'linear-gradient(135deg, hsl(var(--primary) / 0.05), hsl(var(--accent) / 0.05))',
+                      }}
+                    >
                       {/* Only Logo */}
                       {project.logo && !project.image && !project.mobileImage && (
                         <div className="absolute inset-0 flex items-center justify-center p-8">
-                           <img src={project.logo} alt={project.name} loading="lazy" onError={() => setImageErrors(prev => ({ ...prev, [project.name]: true }))} className="max-w-[80%] max-h-[80%] object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:scale-110 transition-transform duration-500" />
+                          <img
+                            src={project.logo}
+                            alt={project.name}
+                            loading="lazy"
+                            onError={() =>
+                              setImageErrors((prev) => ({ ...prev, [project.name]: true }))
+                            }
+                            className="max-w-[80%] max-h-[80%] object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:scale-110 transition-transform duration-500"
+                          />
                         </div>
                       )}
-                      
+
                       {/* Both Desktop and Mobile Images */}
                       {project.image && project.mobileImage && (
                         <>
                           {/* Desktop view */}
-                          <img 
-                            src={project.image} 
-                            loading="lazy" 
-                            onError={() => setImageErrors(prev => ({ ...prev, [project.name]: true }))} 
-                            className="hidden sm:block w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" 
-                            alt="desktop view" 
+                          <img
+                            src={project.image}
+                            loading="lazy"
+                            onError={() =>
+                              setImageErrors((prev) => ({ ...prev, [project.name]: true }))
+                            }
+                            className="hidden sm:block w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                            alt="desktop view"
                           />
                           {/* Mobile view */}
-                          <img 
-                            src={project.mobileImage} 
-                            loading="lazy" 
-                            onError={() => setImageErrors(prev => ({ ...prev, [project.name]: true }))} 
-                            className="block sm:hidden w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                            alt="mobile view" 
+                          <img
+                            src={project.mobileImage}
+                            loading="lazy"
+                            onError={() =>
+                              setImageErrors((prev) => ({ ...prev, [project.name]: true }))
+                            }
+                            className="block sm:hidden w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            alt="mobile view"
                           />
                         </>
                       )}
@@ -102,7 +119,9 @@ export function ProjectsSection() {
                           src={project.image}
                           alt={project.name}
                           loading="lazy"
-                          onError={() => setImageErrors(prev => ({ ...prev, [project.name]: true }))}
+                          onError={() =>
+                            setImageErrors((prev) => ({ ...prev, [project.name]: true }))
+                          }
                           className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       )}
@@ -113,18 +132,30 @@ export function ProjectsSection() {
                           src={project.mobileImage}
                           alt={project.name}
                           loading="lazy"
-                          onError={() => setImageErrors(prev => ({ ...prev, [project.name]: true }))}
+                          onError={() =>
+                            setImageErrors((prev) => ({ ...prev, [project.name]: true }))
+                          }
                           className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       )}
                     </div>
                   ) : (
-                    <div className="h-56 sm:h-64 grid place-items-center border-b border-white/10 text-primary/70 flex-shrink-0" style={{background: 'linear-gradient(135deg, hsl(172 66% 50% / 0.08), hsl(280 70% 60% / 0.08))'}}>
-                      {project.name.toLowerCase().includes('clinic') || project.name.toLowerCase().includes('medical') || project.name.toLowerCase().includes('navbat') ? (
+                    <div
+                      className="h-56 sm:h-64 grid place-items-center border-b border-white/10 text-primary/70 flex-shrink-0"
+                      style={{
+                        background:
+                          'linear-gradient(135deg, hsl(172 66% 50% / 0.08), hsl(280 70% 60% / 0.08))',
+                      }}
+                    >
+                      {project.name.toLowerCase().includes('clinic') ||
+                      project.name.toLowerCase().includes('medical') ||
+                      project.name.toLowerCase().includes('navbat') ? (
                         <Activity className="w-10 h-10" />
-                      ) : project.name.toLowerCase().includes('cinema') || project.name.toLowerCase().includes('asar') ? (
+                      ) : project.name.toLowerCase().includes('cinema') ||
+                        project.name.toLowerCase().includes('asar') ? (
                         <Film className="w-10 h-10" />
-                      ) : project.name.toLowerCase().includes('editor') || project.name.toLowerCase().includes('diary') ? (
+                      ) : project.name.toLowerCase().includes('editor') ||
+                        project.name.toLowerCase().includes('diary') ? (
                         <BookOpen className="w-10 h-10" />
                       ) : project.name.toLowerCase().includes('sms') ? (
                         <MessageSquare className="w-10 h-10" />
@@ -166,17 +197,13 @@ export function ProjectsSection() {
                               asChild
                               className="h-8 text-xs flex items-center gap-1.5 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-200 flex-1"
                             >
-                              <a
-                                href={project.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
+                              <a href={project.link} target="_blank" rel="noopener noreferrer">
                                 <Globe className="w-3.5 h-3.5" />
                                 <span>{language === 'ru' ? 'Перейти' : 'Visit'}</span>
                               </a>
                             </Button>
                           )}
-                          
+
                           {project.github && (
                             <Button
                               variant="outline"
@@ -184,11 +211,7 @@ export function ProjectsSection() {
                               asChild
                               className="h-8 text-xs flex items-center gap-1.5 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-200 flex-1"
                             >
-                              <a
-                                href={project.github}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
+                              <a href={project.github} target="_blank" rel="noopener noreferrer">
                                 <Github className="w-3.5 h-3.5" />
                                 <span>GitHub</span>
                               </a>

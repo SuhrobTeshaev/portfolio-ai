@@ -10,36 +10,36 @@ import { supabase } from '@/integrations/supabase/client';
 
 const contactTranslations = {
   ru: {
-    title: "Связаться со мной",
-    subtitle: "Отправьте сообщение, и я отвечу вам в ближайшее время.",
-    nameLabel: "Ваше имя *",
-    namePlaceholder: "Иван Иванов",
-    contactLabel: "Контакт для связи (опционально)",
-    contactPlaceholder: "Telegram, email или телефон",
-    messageLabel: "Сообщение *",
-    messagePlaceholder: "Опишите ваш вопрос или предложение...",
-    sendButton: "Отправить сообщение",
-    sendingButton: "Отправка...",
-    successMessage: "Сообщение отправлено! Я отвечу вам в ближайшее время.",
-    errorMessage: "Ошибка отправки. Попробуйте написать мне напрямую.",
-    requiredFields: "Пожалуйста, заполните все обязательные поля.",
-    rateLimited: "Слишком много запросов. Попробуйте через 10 минут.",
+    title: 'Связаться со мной',
+    subtitle: 'Отправьте сообщение, и я отвечу вам в ближайшее время.',
+    nameLabel: 'Ваше имя *',
+    namePlaceholder: 'Иван Иванов',
+    contactLabel: 'Контакт для связи (опционально)',
+    contactPlaceholder: 'Telegram, email или телефон',
+    messageLabel: 'Сообщение *',
+    messagePlaceholder: 'Опишите ваш вопрос или предложение...',
+    sendButton: 'Отправить сообщение',
+    sendingButton: 'Отправка...',
+    successMessage: 'Сообщение отправлено! Я отвечу вам в ближайшее время.',
+    errorMessage: 'Ошибка отправки. Попробуйте написать мне напрямую.',
+    requiredFields: 'Пожалуйста, заполните все обязательные поля.',
+    rateLimited: 'Слишком много запросов. Попробуйте через 10 минут.',
   },
   en: {
-    title: "Get in Touch",
+    title: 'Get in Touch',
     subtitle: "Send a message and I'll get back to you as soon as possible.",
-    nameLabel: "Your Name *",
-    namePlaceholder: "John Doe",
-    contactLabel: "Contact Info (optional)",
-    contactPlaceholder: "Telegram, email or phone number",
-    messageLabel: "Message *",
-    messagePlaceholder: "Describe your question or proposal...",
-    sendButton: "Send Message",
-    sendingButton: "Sending...",
+    nameLabel: 'Your Name *',
+    namePlaceholder: 'John Doe',
+    contactLabel: 'Contact Info (optional)',
+    contactPlaceholder: 'Telegram, email or phone number',
+    messageLabel: 'Message *',
+    messagePlaceholder: 'Describe your question or proposal...',
+    sendButton: 'Send Message',
+    sendingButton: 'Sending...',
     successMessage: "Message sent! I'll get back to you soon.",
-    errorMessage: "Failed to send. Please write to me directly.",
-    requiredFields: "Please fill in all required fields.",
-    rateLimited: "Too many requests. Please try again in 10 minutes.",
+    errorMessage: 'Failed to send. Please write to me directly.',
+    requiredFields: 'Please fill in all required fields.',
+    rateLimited: 'Too many requests. Please try again in 10 minutes.',
   },
 };
 
@@ -58,7 +58,7 @@ export function ContactSection() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -124,9 +124,7 @@ export function ContactSection() {
               <Mail className="w-6 h-6 text-primary" />
               <h2 className="text-3xl font-bold">{t.title}</h2>
             </div>
-            <p className="text-muted-foreground text-sm max-w-md mx-auto">
-              {t.subtitle}
-            </p>
+            <p className="text-muted-foreground text-sm max-w-md mx-auto">{t.subtitle}</p>
           </div>
 
           <motion.div

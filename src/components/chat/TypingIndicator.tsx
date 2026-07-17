@@ -12,7 +12,7 @@ export function TypingIndicator() {
       <div className="flex-shrink-0 w-8 h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center">
         <Bot className="w-4 h-4" />
       </div>
-      
+
       <div className="chat-bubble-ai flex items-center">
         <div className="typing-indicator">
           <span></span>

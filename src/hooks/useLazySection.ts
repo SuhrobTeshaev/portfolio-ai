@@ -19,7 +19,7 @@ export function useLazySection(options?: IntersectionObserverInit) {
           observer.disconnect(); // fire once — no memory leak
         }
       },
-      { rootMargin: '200px 0px', threshold: 0.01, ...options },
+      { rootMargin: '200px 0px', threshold: 0.01, ...options }
     );
 
     observer.observe(el);

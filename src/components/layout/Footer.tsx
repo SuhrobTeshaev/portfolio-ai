@@ -15,7 +15,9 @@ export function Footer() {
         <div className="space-y-2">
           <h3 className="text-lg font-semibold text-foreground">{t.contact}</h3>
           <p className="text-sm text-muted-foreground">
-            {language === 'ru' ? 'Свяжитесь со мной любым удобным способом' : 'Feel free to reach out via any channel'}
+            {language === 'ru'
+              ? 'Свяжитесь со мной любым удобным способом'
+              : 'Feel free to reach out via any channel'}
           </p>
         </div>
 

@@ -57,15 +57,17 @@ export function ThemeLanguageProvider({ children }: { children: ReactNode }) {
   };
 
   const toggleTheme = () => {
-    setThemeState(prev => prev === 'dark' ? 'light' : 'dark');
+    setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
   const toggleLanguage = () => {
-    setLanguageState(prev => prev === 'ru' ? 'en' : 'ru');
+    setLanguageState((prev) => (prev === 'ru' ? 'en' : 'ru'));
   };
 
   return (
-    <ThemeLanguageContext.Provider value={{ theme, language, setTheme, setLanguage, toggleTheme, toggleLanguage }}>
+    <ThemeLanguageContext.Provider
+      value={{ theme, language, setTheme, setLanguage, toggleTheme, toggleLanguage }}
+    >
       {children}
     </ThemeLanguageContext.Provider>
   );

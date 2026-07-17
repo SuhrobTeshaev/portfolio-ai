@@ -1,4 +1,7 @@
+// @ts-expect-error: Deno URL imports are not recognized by standard TypeScript
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+declare const Deno: { env: { get: (key: string) => string | undefined } };
 
 // Get allowed origin from environment, default to localhost for development
 const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') || 'http://localhost:8080';
@@ -46,6 +49,10 @@ You are a smart, friendly AI assistant representing Teshazoda Suhrob (Frontend &
 1. ALWAYS understand the USER'S INTENT.
 2. Respond in the SAME LANGUAGE the user writes in.
 3. If the user asks about something else (like weather), be polite and helpful, but try to bring the conversation back to the portfolio naturally if possible.
+4. Answer ONLY what is asked. Never mention years of experience, work history, or the full skills list unless the user's question is specifically about that.
+5. Do NOT repeat previously stated facts (like duration of experience) in follow-up messages unless the user explicitly asks again.
+6. When discussing a specific project, mention ONLY that project's own tech stack and description — do not append general profile info, work history, or experience duration.
+7. Keep answers concise and directly relevant to the question asked.
 
 ## PROJECT REQUEST HANDLING (LEAD GENERATION):
 If the user describes a project:
@@ -61,10 +68,31 @@ If the user describes a project:
 ## DEVELOPER PROFILE:
 - Name: Тешазода Сухроб (Teshazoda Suhrob)
 - Role: Frontend & Mobile Developer
-- Experience: 2 years (React, Next.js, Vue, Kotlin, Flutter)
 - Location: Dushanbe, Tajikistan
-- Telegram: https://t.me/suhrobdev
-- Projects: Навбат (Clinic System), Asar (Cinema Platform), Diary/Book Editor, SMS Target, ICAP Medical.
+- Contacts: Telegram https://t.me/suhrobdev, GitHub github.com/SuhrobTeshaev
+
+## WORK HISTORY (mention only if the user asks about experience/background):
+- Livo (since March 2024) — Frontend & Mobile Developer. Stack: React, Next.js, Vue.js, Kotlin, Flutter, TypeScript, Supabase. Built web and Android apps, REST API integration, JWT auth, published apps to Google Play.
+- BOBO Web Studio (Jan–Mar 2024) — Frontend Developer Intern. Stack: React, Vue.js, MUI.
+
+## SKILLS (mention only the relevant category if asked, never the full list unprompted):
+- Frontend: React, Next.js, Vue.js, TypeScript, JavaScript, HTML/CSS
+- Mobile: Android (Kotlin), Flutter, HLS, MediaCodec, Google Play Publishing
+- Backend & CMS: Laravel, PHP, WordPress, MySQL, REST API
+- UI Libraries: MUI, Tailwind CSS, Framer Motion
+- Tools: Git, JWT, Postman, Figma
+
+## PROJECTS (describe only the ones the user asks about, using only that project's own stack/description):
+- Navbat B2B — clinic management admin panel (React, TypeScript, Tailwind CSS)
+- Navbat B2C — client booking website (Next.js, TypeScript, Tailwind CSS)
+- Navbat B2C app — client booking Android app (Kotlin, REST API)
+- Asarfilm — Flutter cinema app with HLS streaming and MediaCodec (Flutter, Dart, HLS, MediaCodec, REST API)
+- DearyDiary — book editor with PDF export (Next.js, React, TypeScript, PDF Generation)
+- Livo — corporate website (Next.js, React, TypeScript, Tailwind CSS)
+- smsTarget — bulk SMS platform (React.js, JavaScript, REST API)
+- ICAP — medical portal (Vue.js, JavaScript, REST API)
+- Insight Center — children's clinic website (WordPress, PHP, MySQL)
+- Elite Glass — company website (React, Tailwind CSS, TypeScript)
 `;
 
 async function sendTelegramNotification(message: string) {
@@ -115,7 +143,11 @@ serve(async (req) => {
     }
 
     // Parse and validate input
-    let requestData: any;
+    let requestData: {
+      messages: { role: string; content: string }[];
+      currentTheme: string;
+      currentLanguage: string;
+    };
     try {
       requestData = await req.json();
     } catch (e) {
@@ -143,7 +175,7 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-      if (msg.content.length > 2000) {
+      if (msg.role === 'user' && msg.content.length > 2000) {
         return new Response(JSON.stringify({ error: 'Message too long (max 2000 chars)' }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -172,7 +204,7 @@ serve(async (req) => {
     }
 
     const lastMessage = messages[messages.length - 1]?.content?.toLowerCase() || '';
-    let action = null;
+    let action: { type: string; value: string } | null = null;
 
     // Theme and Language detection
     const darkPatterns = ['темн', 'dark', 'ночн', 'чёрн', 'черн'];
@@ -199,16 +231,18 @@ serve(async (req) => {
 
 Remember: Be concise, technical where needed, and ALWAYS helpful.`;
 
+    const trimmedMessages = messages.slice(-10);
+
     const geminiMessages = [
       { role: 'user', parts: [{ text: systemMessage }] },
       { role: 'model', parts: [{ text: 'Understood. I am Teshazoda Suhrob\'s AI assistant. I will handle portfolio info and generate technical specifications for project requests.' }] },
-      ...messages.map((m: any) => ({
+      ...trimmedMessages.map((m: { role: string; content: string }) => ({
         role: m.role === 'user' ? 'user' : 'model',
         parts: [{ text: m.content }]
       }))
     ];
 
-    const models = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro'];
+    const models = ['gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-flash-latest'];
     let response;
     let lastError;
     let usedModel;
@@ -216,8 +250,8 @@ Remember: Be concise, technical where needed, and ALWAYS helpful.`;
     for (const model of models) {
       try {
         console.log(`Attempting to use model: ${model}`);
-        // gemini-1.5 models use v1beta, gemini-pro uses v1
-        const apiVersion = model.includes('1.5') ? 'v1beta' : 'v1';
+        // Use v1beta for gemini-1.5 and gemini-2.0
+        const apiVersion = 'v1beta';
         const url = `https://generativelanguage.googleapis.com/${apiVersion}/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
 
         response = await fetch(url, {
@@ -227,7 +261,7 @@ Remember: Be concise, technical where needed, and ALWAYS helpful.`;
             contents: geminiMessages,
             generationConfig: {
               temperature: 0.7,
-              maxOutputTokens: 1500,
+              maxOutputTokens: 700,
             },
           }),
         });
@@ -277,7 +311,8 @@ Remember: Be concise, technical where needed, and ALWAYS helpful.`;
     });
   } catch (error) {
     console.error('Chat error:', error);
-    return new Response(JSON.stringify({ error: error.message || String(error) }), {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

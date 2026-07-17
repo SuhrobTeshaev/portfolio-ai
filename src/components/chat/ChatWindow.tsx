@@ -57,7 +57,7 @@ export function ChatWindow() {
     if (!text.trim() || isLoading) return;
 
     const userMessage: Message = { role: 'user', content: text };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
@@ -66,11 +66,11 @@ export function ChatWindow() {
         body: {
           messages: [...messages, userMessage],
           currentTheme: theme,
-          currentLanguage: language
+          currentLanguage: language,
         },
         headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
-        }
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
       });
 
       if (error) throw error;
@@ -80,13 +80,14 @@ export function ChatWindow() {
       }
 
       const assistantMessage: Message = { role: 'assistant', content: data.response };
-      setMessages(prev => [...prev, assistantMessage]);
+      setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Chat error:', error);
-      const errorMessage = language === 'ru'
-        ? 'Произошла ошибка. Попробуйте ещё раз.'
-        : 'An error occurred. Please try again.';
-      setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
+      const errorMessage =
+        language === 'ru'
+          ? 'Произошла ошибка. Попробуйте ещё раз.'
+          : 'An error occurred. Please try again.';
+      setMessages((prev) => [...prev, { role: 'assistant', content: errorMessage }]);
     } finally {
       setIsLoading(false);
     }
@@ -144,9 +145,7 @@ export function ChatWindow() {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.length === 0 && (
                 <div className="space-y-4">
-                  <p className="text-sm text-muted-foreground text-center">
-                    {t.greetingSubtitle}
-                  </p>
+                  <p className="text-sm text-muted-foreground text-center">{t.greetingSubtitle}</p>
                   <SuggestedQuestions
                     questions={t.suggestedQuestions}
                     onSelect={handleSuggestedQuestion}

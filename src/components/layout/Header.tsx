@@ -59,7 +59,7 @@ export function Header() {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
     setIsMobileMenuOpen(false);
@@ -83,9 +83,9 @@ export function Header() {
           transition={{ delay: 0.2 }}
           className="cursor-pointer flex items-center"
         >
-          <img 
-            src={logoUrl} 
-            alt="Suhrob Teshaev Logo" 
+          <img
+            src={logoUrl}
+            alt="Suhrob Teshaev Logo"
             className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 hover:scale-105 "
           />
         </motion.a>
@@ -107,28 +107,15 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleLanguage}
-            className="relative"
-          >
+          <Button variant="ghost" size="icon" onClick={toggleLanguage} className="relative">
             <Globe className="w-5 h-5" />
             <span className="absolute -bottom-1 -right-1 text-[10px] font-bold uppercase bg-primary text-primary-foreground rounded px-1">
               {language}
             </span>
           </Button>
-          
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-5 h-5" />
-            ) : (
-              <Moon className="w-5 h-5" />
-            )}
+
+          <Button variant="ghost" size="icon" onClick={toggleTheme}>
+            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </Button>
 
           {/* Mobile Menu Button */}
@@ -160,7 +147,9 @@ export function Header() {
                   href={`#${item.id}`}
                   onClick={(e) => handleNavClick(e, item.id)}
                   className={`text-sm font-medium py-2 px-3 rounded-lg transition-colors hover:bg-secondary ${
-                    activeSection === item.id ? 'text-primary bg-primary/10' : 'text-muted-foreground'
+                    activeSection === item.id
+                      ? 'text-primary bg-primary/10'
+                      : 'text-muted-foreground'
                   }`}
                 >
                   {t[item.labelKey as keyof typeof t]}

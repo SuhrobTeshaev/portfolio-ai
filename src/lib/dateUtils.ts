@@ -68,19 +68,37 @@ export function formatDuration(
 }
 
 const MONTHS_RU = [
-  'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-  'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
+  'Январь',
+  'Февраль',
+  'Март',
+  'Апрель',
+  'Май',
+  'Июнь',
+  'Июль',
+  'Август',
+  'Сентябрь',
+  'Октябрь',
+  'Ноябрь',
+  'Декабрь',
 ];
 
 const MONTHS_EN = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 function formatMonthYear(date: Date, language: Language): string {
-  const month = language === 'ru'
-    ? MONTHS_RU[date.getMonth()]
-    : MONTHS_EN[date.getMonth()];
+  const month = language === 'ru' ? MONTHS_RU[date.getMonth()] : MONTHS_EN[date.getMonth()];
   return `${month} ${date.getFullYear()}`;
 }
 
@@ -99,7 +117,9 @@ export function formatPeriod(
   const startStr = formatMonthYear(start, language);
   const endStr = endDate
     ? formatMonthYear(new Date(endDate), language)
-    : (language === 'ru' ? 'Настоящее время' : 'Present');
+    : language === 'ru'
+      ? 'Настоящее время'
+      : 'Present';
 
   return `${startStr} — ${endStr}`;
 }
@@ -113,8 +133,8 @@ export function getTotalExperience(
   language: Language
 ): string {
   if (!experiences.length) return '';
-  const earliest = experiences.reduce((min, exp) =>
-    exp.startDate < min ? exp.startDate : min,
+  const earliest = experiences.reduce(
+    (min, exp) => (exp.startDate < min ? exp.startDate : min),
     experiences[0].startDate
   );
   return formatDuration(earliest, undefined, language);

@@ -9,11 +9,7 @@ interface SectionSkeletonProps {
 
 export function SectionSkeleton({ height = '320px' }: SectionSkeletonProps) {
   return (
-    <div
-      className="w-full mx-auto px-6 py-8"
-      style={{ minHeight: height }}
-      aria-hidden="true"
-    >
+    <div className="w-full mx-auto px-6 py-8" style={{ minHeight: height }} aria-hidden="true">
       <div
         className="w-full h-full rounded-2xl animate-pulse"
         style={{

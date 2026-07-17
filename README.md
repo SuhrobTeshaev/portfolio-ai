@@ -32,10 +32,12 @@ Then open the local URL shown in the terminal (typically `http://localhost:8080`
 Before running locally or deploying, you need to configure these environment variables in `.env`:
 
 **Frontend:**
+
 - `VITE_SUPABASE_URL` — Your Supabase project URL
 - `VITE_SUPABASE_PUBLISHABLE_KEY` — Your Supabase anonymous/public key
 
 **Backend (Supabase Edge Functions):**
+
 - `GEMINI_API_KEY` — Get from [Google AI Studio](https://aistudio.google.com/app/apikeys)
 - `TELEGRAM_BOT_TOKEN` — Get from [@BotFather](https://t.me/BotFather) on Telegram
 - `TELEGRAM_CHAT_ID` — Your Telegram chat ID (where project leads will be notified)
@@ -79,6 +81,7 @@ npm run build
 ```
 
 Then deploy with:
+
 - Vercel, Netlify, Firebase Hosting, or your own CDN
 - Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` as environment variables
 
@@ -92,6 +95,7 @@ supabase functions deploy portfolio-chat \
 ```
 
 Ensure these environment variables are set in Supabase project settings:
+
 - `GEMINI_API_KEY`
 - `TELEGRAM_BOT_TOKEN`
 - `TELEGRAM_CHAT_ID`
