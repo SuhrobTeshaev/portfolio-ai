@@ -2,12 +2,16 @@ import React from 'react';
 import { Heart, Mail, Send } from 'lucide-react';
 import { portfolioData, uiTranslations } from '@/lib/portfolioData';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
-import logoUrl from '../../../public/suhrob_teshaev_header_transparent.svg';
+import logoDarkUrl from '../../../public/suhrob_teshaev_header_transparent.svg';
+import logoLightUrl from '../../../public/suhrob_teshaev_header_transparent_light.svg';
+
 
 export function Footer() {
-  const { language } = useThemeLanguage();
+  const {theme,language } = useThemeLanguage();
+
   const t = uiTranslations[language];
   const data = portfolioData;
+  const logoUrl = theme === 'dark' ? logoDarkUrl : logoLightUrl;
 
   return (
     <footer className="py-12 border-t border-border bg-secondary/10">

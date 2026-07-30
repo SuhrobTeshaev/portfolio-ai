@@ -6,6 +6,9 @@ import { portfolioData } from '@/lib/portfolioData';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { getTotalExperience } from '@/lib/dateUtils';
 
+import avatar from '/public/photo.png';
+
+
 export function HeroSection() {
   const { language } = useThemeLanguage();
   const data = portfolioData;
@@ -26,17 +29,18 @@ export function HeroSection() {
           transition={{ duration: 0.6 }}
           className="text-center space-y-6"
         >
-          {/* Avatar placeholder */}
+          {/* Avatar */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-            className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-4xl font-bold text-primary-foreground glow-effect"
+            className="w-40 h-40 mx-auto rounded-full overflow-hidden glow-effect border-2 border-primary"
           >
-            {data.name
-              .split(' ')
-              .map((n) => n[0])
-              .join('')}
+            <img 
+              src={avatar} /* ЗАМЕНИТЕ ЭТОТ ПУТЬ НА ПУТЬ К ВАШЕМУ ФОТО. Например, положите фото в папку public и напишите src="/myphoto.jpg" */
+              alt={data.name}
+              className="w-full h-full object-cover"
+            />
           </motion.div>
 
           <div className="space-y-2">

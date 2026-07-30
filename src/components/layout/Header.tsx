@@ -4,7 +4,8 @@ import { Sun, Moon, Globe, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { uiTranslations } from '@/lib/portfolioData';
-import logoUrl from '../../../public/suhrob_teshaev_header_transparent.svg';
+import logoDarkUrl from '../../../public/suhrob_teshaev_header_transparent.svg';
+import logoLightUrl from '../../../public/suhrob_teshaev_header_transparent_light.svg';
 
 const navItems = [
   { id: 'experience', labelKey: 'experience' },
@@ -19,6 +20,7 @@ export function Header() {
   const [activeSection, setActiveSection] = useState<string>('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = uiTranslations[language];
+  const logoUrl = theme === 'dark' ? logoDarkUrl : logoLightUrl;
 
   useEffect(() => {
     const sections = ['experience', 'skills', 'projects', 'education', 'contact'];
@@ -89,6 +91,7 @@ export function Header() {
             className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 hover:scale-105 "
           />
         </motion.a>
+
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
