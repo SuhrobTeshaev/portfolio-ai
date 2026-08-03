@@ -1,0 +1,6 @@
+import{c as n,u as r,j as e,m as i,p as o,b as m}from"./index-4D8xqNnO.js";/**
+ * @license lucide-react v0.462.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const d=n("CodeXml",[["path",{d:"m18 16 4-4-4-4",key:"1inbqp"}],["path",{d:"m6 8-4 4 4 4",key:"15zrgr"}],["path",{d:"m14.5 4-5 16",key:"e7oirm"}]]);function x(){const{language:t}=r(),l=m[t];return e.jsx("section",{id:"skills",className:"py-16",children:e.jsx("div",{className:"container w-full max-w-[1200px] mx-auto px-6",children:e.jsxs(i.div,{initial:{opacity:0,y:20},whileInView:{opacity:1,y:0},viewport:{once:!0},className:"space-y-8",children:[e.jsxs("div",{className:"flex items-center gap-3",children:[e.jsx(d,{className:"w-6 h-6 text-primary"}),e.jsx("h2",{className:"section-title mb-0",children:l.skills})]}),e.jsx("div",{className:"grid md:grid-cols-2 gap-6",children:o.skills.map((s,c)=>e.jsxs(i.div,{initial:{opacity:0,y:20},whileInView:{opacity:1,y:0},viewport:{once:!0},transition:{delay:c*.1},className:"glass-card p-6",children:[e.jsx("h3",{className:"text-lg font-semibold mb-4 text-black dark:text-white",children:s.category}),e.jsx("div",{className:"flex flex-wrap gap-2",children:s.items.map(a=>e.jsx("span",{className:"skill-tag",children:a},a))})]},s.category))})]})})})}export{x as SkillsSection};
