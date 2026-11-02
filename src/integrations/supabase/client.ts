@@ -9,9 +9,10 @@ const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 // import { supabase } from "@/integrations/supabase/client";
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  // The site has no sign-in — only anonymous edge-function calls — so keep no session around
   auth: {
-    storage: localStorage,
-    persistSession: true,
-    autoRefreshToken: true,
+    persistSession: false,
+    autoRefreshToken: false,
+    detectSessionInUrl: false,
   }
 });

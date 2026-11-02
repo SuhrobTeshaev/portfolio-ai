@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { portfolioData } from '@/lib/portfolioData';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { getTotalExperience } from '@/lib/dateUtils';
+import { ContactDock } from './ContactDock';
 
 import avatar from '/public/photo.png';
-
 
 export function HeroSection() {
   const { language } = useThemeLanguage();
@@ -17,7 +17,7 @@ export function HeroSection() {
 
   const dynamicSummary =
     language === 'ru'
-      ? `Frontend и Mobile разработчик с ${totalExperience} опыта. ${data.summary.ru}`
+      ? `Frontend и Mobile разработчик, опыт — ${totalExperience}. ${data.summary.ru}`
       : `Frontend & Mobile Developer with ${totalExperience} of experience. ${data.summary.en}`;
 
   return (
@@ -36,11 +36,7 @@ export function HeroSection() {
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
             className="w-40 h-40 mx-auto rounded-full overflow-hidden glow-effect border-2 border-primary"
           >
-            <img 
-              src={avatar} /* ЗАМЕНИТЕ ЭТОТ ПУТЬ НА ПУТЬ К ВАШЕМУ ФОТО. Например, положите фото в папку public и напишите src="/myphoto.jpg" */
-              alt={data.name}
-              className="w-full h-full object-cover"
-            />
+            <img src={avatar} alt={data.name[language]} className="w-full h-full object-cover" />
           </motion.div>
 
           <div className="space-y-2">
@@ -50,7 +46,7 @@ export function HeroSection() {
               transition={{ delay: 0.3 }}
               className="text-4xl md:text-5xl lg:text-6xl font-bold"
             >
-              {data.name}
+              {data.name[language]}
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
@@ -108,10 +104,10 @@ export function HeroSection() {
               <a
                 href={
                   language === 'ru'
-                    ? `${import.meta.env.BASE_URL}SuhrobTeshaevCV.pdf`
+                    ? `${import.meta.env.BASE_URL}SuhrobTeshazoda_CV.pdf`
                     : `${import.meta.env.BASE_URL}SuhrobTeshaevCV_en.pdf`
                 }
-                download={language === 'ru' ? 'SuhrobTeshaevCV.pdf' : 'SuhrobTeshaevCV_en.pdf'}
+                download={language === 'ru' ? 'SuhrobTeshazoda_CV.pdf' : 'SuhrobTeshazoda_CV_en.pdf'}
               >
                 <Download className="w-5 h-5" />
                 <span>{language === 'ru' ? 'Скачать резюме' : 'Download CV'}</span>
@@ -119,80 +115,15 @@ export function HeroSection() {
             </Button>
           </motion.div>
 
-          {/* Social Links */}
+          {/* Social Contact Dock */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="flex items-center justify-center gap-4 pt-4"
+            className="flex items-center justify-center pt-4"
           >
-            <a
-              href={`mailto:${data.email}`}
-              className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-              style={{
-                background: 'var(--glass-bg)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid var(--glass-border)',
-                boxShadow: 'var(--glass-shadow)',
-              }}
-              aria-label="Email"
-            >
-              <Mail className="w-5 h-5" />
-            </a>
-            <a
-              href={`https://${data.github}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-              style={{
-                background: 'var(--glass-bg)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid var(--glass-border)',
-                boxShadow: 'var(--glass-shadow)',
-              }}
-              aria-label="GitHub"
-            >
-              <Github className="w-5 h-5" />
-            </a>
-            <a
-              href={`https://...`}
-              onClick={(e) => {
-                e.preventDefault();
-                const el = document.getElementById('contact');
-                if (el) {
-                  el.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-              className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-              style={{
-                background: 'var(--glass-bg)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid var(--glass-border)',
-                boxShadow: 'var(--glass-shadow)',
-              }}
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="w-5 h-5" />
-            </a>
-            <a
-              href={data.telegram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-              style={{
-                background: 'var(--glass-bg)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid var(--glass-border)',
-                boxShadow: 'var(--glass-shadow)',
-              }}
-              aria-label="Telegram"
-            >
-              <Send className="w-5 h-5" />
-            </a>
+            {/* The dock is ~414px wide — shrink it to fit phone screens */}
+            <ContactDock className="max-[440px]:scale-[0.82]" />
           </motion.div>
         </motion.div>
       </div>

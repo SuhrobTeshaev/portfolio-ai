@@ -7,6 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { useTurnstile } from '@/hooks/useTurnstile';
+import SideRays from '@/components/react-bits/SideRays';
 
 const contactTranslations = {
   ru: {
@@ -44,7 +46,7 @@ const contactTranslations = {
 };
 
 export function ContactSection() {
-  const { language } = useThemeLanguage();
+  const { language, theme } = useThemeLanguage();
   const t = contactTranslations[language];
 
   const [formData, setFormData] = useState({
@@ -54,6 +56,7 @@ export function ContactSection() {
     website: '', // honeypot
   });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [turnstileRef, getTurnstileToken] = useTurnstile();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -81,12 +84,14 @@ export function ContactSection() {
     }
 
     try {
+      const turnstileToken = await getTurnstileToken();
       const { error, data } = await supabase.functions.invoke('portfolio-contact', {
         body: {
           name: formData.name,
           contact: formData.contact,
           message: formData.message,
           website: formData.website,
+          turnstileToken,
         },
       });
 
@@ -111,7 +116,7 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-16 ">
+    <section className="py-16 ">
       <div className="container w-full max-w-[1200px] mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -133,7 +138,25 @@ export function ContactSection() {
             viewport={{ once: true }}
             className="glass-card gradient-border p-6 md:p-8 max-w-2xl mx-auto w-full"
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Light rays behind the form, clipped to the card's rounded corners */}
+            <div
+              className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]"
+              aria-hidden="true"
+            >
+              <SideRays
+                rayColor1="#FFC46B"
+                rayColor2="#96c8ff"
+                origin="top-right"
+                speed={2.5}
+                intensity={2}
+                spread={2}
+                density={5}
+                followMouse
+                lightMode={theme === 'light'}
+              />
+            </div>
+
+            <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
               {/* Honeypot — hidden from humans, visible to bots */}
               <div className="absolute -top-[9999px] -left-[9999px]" aria-hidden="true">
                 <Label htmlFor="website">Website</Label>
@@ -162,7 +185,7 @@ export function ContactSection() {
                   placeholder={t.namePlaceholder}
                   required
                   disabled={status === 'sending'}
-                  className="glass-input"
+                  className="glass-input ym-disable-keys ym-hide-content"
                 />
               </div>
 
@@ -179,7 +202,7 @@ export function ContactSection() {
                   onChange={handleChange}
                   placeholder={t.contactPlaceholder}
                   disabled={status === 'sending'}
-                  className="glass-input"
+                  className="glass-input ym-disable-keys ym-hide-content"
                 />
               </div>
 
@@ -197,9 +220,12 @@ export function ContactSection() {
                   required
                   rows={5}
                   disabled={status === 'sending'}
-                  className="glass-input resize-none"
+                  className="glass-input resize-none ym-disable-keys ym-hide-content"
                 />
               </div>
+
+              {/* Turnstile shows a challenge here only if Cloudflare needs interaction */}
+              <div ref={turnstileRef} className="flex justify-center empty:hidden" />
 
               {/* Feedback */}
               <div className="space-y-4">

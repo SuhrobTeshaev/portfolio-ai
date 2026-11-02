@@ -9,7 +9,7 @@ export function SkillsSection() {
   const t = uiTranslations[language];
 
   return (
-    <section id="skills" className="py-16">
+    <section className="py-16">
       <div className="container w-full max-w-[1200px] mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -32,7 +32,7 @@ export function SkillsSection() {
                 transition={{ delay: index * 0.1 }}
                 className="glass-card p-6"
               >
-                <h3 className="text-lg font-semibold mb-4 text-primary">{category.category}</h3>
+                <h3 className="text-lg font-semibold mb-4 text-black dark:text-white">{category.category}</h3>
                 <div className="flex flex-wrap gap-2">
                   {category.items.map((skill) => (
                     <span key={skill} className="skill-tag">

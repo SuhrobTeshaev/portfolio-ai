@@ -26,6 +26,8 @@ export function SectionSkeleton({ height = '320px' }: SectionSkeletonProps) {
 
 // ─── LazySection (OCP: open for extension via factory prop) ───────────────────
 interface LazySectionProps {
+  /** Anchor id — lives on the wrapper so nav links work before the chunk loads */
+  id?: string;
   /** Dynamic import factory — same signature as React.lazy expects */
   factory: () => Promise<{ default: ComponentType }>;
   /** Skeleton min-height — prevents CLS / layout jumps while loading */
@@ -38,7 +40,7 @@ interface LazySectionProps {
  *   2. React.lazy + Suspense — splits JS into per-section chunks
  *   3. SectionSkeleton       — holds space so layout never jumps (zero CLS)
  */
-export function LazySection({ factory, skeletonHeight }: LazySectionProps) {
+export function LazySection({ id, factory, skeletonHeight }: LazySectionProps) {
   const [ref, isVisible] = useLazySection();
 
   // Stable ref — factory is declared inline in Index, so we capture it once
@@ -49,7 +51,7 @@ export function LazySection({ factory, skeletonHeight }: LazySectionProps) {
   const Component = ComponentRef.current;
 
   return (
-    <div ref={ref}>
+    <div ref={ref} id={id}>
       {isVisible ? (
         <Suspense fallback={<SectionSkeleton height={skeletonHeight} />}>
           <Component />

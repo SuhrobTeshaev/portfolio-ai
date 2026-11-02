@@ -10,7 +10,7 @@ export function ExperienceSection() {
   const t = uiTranslations[language];
 
   return (
-    <section id="experience" className="py-16">
+    <section className="py-16">
       <div className="container w-full max-w-[1200px] mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

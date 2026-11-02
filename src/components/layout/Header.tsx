@@ -4,6 +4,7 @@ import { Sun, Moon, Globe, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { uiTranslations } from '@/lib/portfolioData';
+import { scrollToSection } from '@/lib/scrollToSection';
 import logoDarkUrl from '../../../public/suhrob_teshaev_header_transparent.svg';
 import logoLightUrl from '../../../public/suhrob_teshaev_header_transparent_light.svg';
 
@@ -43,27 +44,12 @@ export function Header() {
       if (el) observer.observe(el);
     });
 
-    return () => {
-      sections.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) observer.unobserve(el);
-      });
-    };
+    return () => observer.disconnect();
   }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    const el = document.getElementById(id);
-    if (el) {
-      const headerOffset = 80;
-      const elementPosition = el.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
-    }
+    scrollToSection(id);
     setIsMobileMenuOpen(false);
   };
 
@@ -87,7 +73,7 @@ export function Header() {
         >
           <img
             src={logoUrl}
-            alt="Suhrob Teshaev Logo"
+            alt="Suhrob Teshazoda Logo"
             className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 hover:scale-105 "
           />
         </motion.a>

@@ -1,5 +1,30 @@
-export interface PortfolioData {
+export interface Project {
   name: string;
+  description: {
+    ru: string;
+    en: string;
+  };
+  technologies: string[];
+  link?: string;
+  github?: string;
+  image?: string;
+  mobileImage?: string;
+  logo?: string;
+  /** Extra screenshots/artwork; the card shows them as switchable thumbnails over the cover */
+  gallery?: string[];
+  /** Short muted looping clip shown instead of the cover; `image` becomes its poster */
+  video?: string;
+  /** Still being built — the card shows an "in progress" badge */
+  inProgress?: boolean;
+  /** 'contain' keeps the whole cover visible (for transparent artwork and screenshots) */
+  imageFit?: 'cover' | 'contain';
+}
+
+export interface PortfolioData {
+  name: {
+    ru: string;
+    en: string;
+  };
   title: string;
   location: string;
   email: string;
@@ -26,7 +51,10 @@ export interface PortfolioData {
     items: string[];
   }[];
   languages: {
-    language: string;
+    language: {
+      ru: string;
+      en: string;
+    };
     level: {
       ru: string;
       en: string;
@@ -45,19 +73,9 @@ export interface PortfolioData {
     image?: string;
     fileUrl?: string;
   }[];
-  projects: {
-    name: string;
-    description: {
-      ru: string;
-      en: string;
-    };
-    technologies: string[];
-    link?: string;
-    github?: string;
-    image?: string;
-    mobileImage?: string;
-    logo?: string;
-  }[];
+  projects: Project[];
+  /** Personal pet projects — shown as their own block under the commercial projects */
+  petProjects: Project[];
 }
 
 const basePath = import.meta.env.BASE_URL;
@@ -81,9 +99,30 @@ import MetaHtmlCssImage from '../../public/html.png';
 import reactAdvancedImage from '../../public/Advanced React.png';
 import EliteGlassImage from '../../public/glass.png';
 
+// Pet projects
+import snowokMotion from '../../public/projects/snowok-motion.mp4';
+import snowokPoster from '../../public/projects/snowok-motion-poster.webp';
+import snowokCover from '../../public/projects/snowok-cover.webp';
+import snowokEmotions from '../../public/projects/snowok-emotions.webp';
+import snowok3dHappy from '../../public/projects/snowok-3d-happy.webp';
+import snowok3dWink from '../../public/projects/snowok-3d-wink.webp';
+import lifeosCover from '../../public/projects/lifeos-cover.webp';
+import lifeosToday from '../../public/projects/lifeos-today.webp';
+import lifeosTasks from '../../public/projects/lifeos-tasks.webp';
+import lifeosMoney from '../../public/projects/lifeos-money.webp';
+import lifeosStudy from '../../public/projects/lifeos-study.webp';
+import lifeosClock from '../../public/projects/lifeos-clock.webp';
+import tuyMotion from '../../public/projects/tuy-motion.mp4';
+import tuyPoster from '../../public/projects/tuy-motion-poster.webp';
+import tuyBuild from '../../public/projects/tuy-build.webp';
+import tuyCabinet from '../../public/projects/tuy-cabinet.webp';
+import tuyAdmin from '../../public/projects/tuy-admin.webp';
+import safycloBanner from '../../public/projects/safyclo-banner.webp';
+import safycloAbaya from '../../public/projects/safyclo-abaya.webp';
+import safycloOlive from '../../public/projects/safyclo-olive.webp';
 
 export const portfolioData: PortfolioData = {
-  name: 'Тешазода Сухроб',
+  name: { ru: 'Тешазода Сухроб', en: 'Suhrob Teshazoda' },
   title: 'Frontend & Mobile Developer',
   location: 'Душанбе, Таджикистан',
   email: 'suhrobtesha@gmail.com',
@@ -91,8 +130,8 @@ export const portfolioData: PortfolioData = {
   linkedin: 'linkedin.com/in/suhrob-teshazoda',
   telegram: 'https://t.me/suhrobdev',
   summary: {
-    ru: 'Frontend и Mobile разработчик, специализируюсь на React, Next.js, Vue.js и нативной разработке на Kotlin. Работаю с Flutter для кроссплатформенной разработки. Ориентирован на создание продакшен-решений с фокусом на стабильность и поддержку после релиза.',
-    en: 'Frontend & Mobile Developer specializing in React, Next.js, Vue.js and native Kotlin development. Working with Flutter for cross-platform development. Focused on production-ready solutions with emphasis on stability and post-release support.',
+    ru: 'Специализируюсь на React, Next.js, Vue.js и нативной разработке на Kotlin. Работаю с Flutter для кроссплатформенной разработки. Ориентирован на создание продакшен-решений с фокусом на стабильность и поддержку после релиза.',
+    en: 'Specializing in React, Next.js, Vue.js and native Kotlin development. Working with Flutter for cross-platform development. Focused on production-ready solutions with emphasis on stability and post-release support.',
   },
   experience: [
     {
@@ -140,9 +179,9 @@ export const portfolioData: PortfolioData = {
     },
   ],
   languages: [
-    { language: 'Таджикский', level: { ru: 'Родной', en: 'Native' } },
-    { language: 'Русский', level: { ru: 'Свободный', en: 'Fluent' } },
-    { language: 'English', level: { ru: 'Средний (B1)', en: 'Intermediate (B1)' } },
+    { language: { ru: 'Таджикский', en: 'Tajik' }, level: { ru: 'Родной', en: 'Native' } },
+    { language: { ru: 'Русский', en: 'Russian' }, level: { ru: 'Свободный', en: 'Fluent' } },
+    { language: { ru: 'Английский', en: 'English' }, level: { ru: 'Средний (B1)', en: 'Intermediate (B1)' } },
   ],
   education: [
     {
@@ -215,8 +254,8 @@ export const portfolioData: PortfolioData = {
     {
       name: 'Navbat - B2C',
       description: {
-        ru: 'Клиентское вебсайт для записи в клиники.',
-        en: 'Client web for booking appointments in clinics.',
+        ru: 'Клиентский вебсайт для записи в клиники.',
+        en: 'Client website for booking appointments in clinics.',
       },
       technologies: ['next.js', 'typescript', 'tailwindcss'],
       link: 'https://navbat.tj',
@@ -300,7 +339,7 @@ export const portfolioData: PortfolioData = {
       technologies: ['React', 'Vue.js', 'WordPress', 'HTML/CSS', 'JavaScript'],
     },
     {
-      name: 'Ellite Glass',
+      name: 'Elite Glass',
       description: {
         ru: 'Премиальные стеклянные решения',
         en: 'Premium glass solutions',
@@ -309,14 +348,54 @@ export const portfolioData: PortfolioData = {
       technologies: ['React', 'Tailwind CSS', 'TypeScript'],
       link: 'https://eliteglass.tj/',
     },
+  ],
+  petProjects: [
     {
-      name: 'Ellite Glass',
+      name: 'Снежок (Snowok)',
       description: {
-        ru: 'Сайт компании занимающейся производством и продажей стекол.',
-        en: 'Company website for the production and sale of glass.',
+        ru: '«Снежок — тайны гор»: детская Android-игра про снежного барса для детей 3–6 лет. Готова первая миссия «Путь к водопаду»: выбрать, посчитать, обвести, сопоставить. Снежок реагирует на ответы, мир вокруг меняется. Персонаж — своя 3D-модель с ригом, рендер через Filament.',
+        en: '"Snowok: Secrets of the Mountains", an Android game for kids aged 3–6 about a snow leopard cub. The first mission, "Path to the Waterfall", is playable: choose, count, trace, match. Snowok reacts to every answer and the world changes around him. The character is a custom rigged 3D model rendered with Filament.',
       },
-      technologies: ['React', 'JavaScript', 'HTML/CSS'],
-      link: 'https://astro-portfolio.vercel.app',
+      technologies: ['Kotlin', 'Jetpack Compose', 'Filament', 'Blender', 'Gradle'],
+      image: snowokPoster,
+      video: snowokMotion,
+      inProgress: true,
+      gallery: [snowokPoster, snowokCover, snowokEmotions, snowok3dHappy, snowok3dWink],
+    },
+    {
+      name: 'Life OS',
+      description: {
+        ru: 'Приложение для тайм-менеджмента: задачи с повтором и вечерним переносом, привычки со стриками, фокус-таймер на перекидных часах, учёт долгов и расходов, 600 английских фраз с тестами. Android-оболочка с виджетами, ярлыками и плиткой «Фокус 25». Работает офлайн.',
+        en: 'Time-management app: tasks with repeats and evening carry-over, habits with streaks, a focus timer on a flip clock, debts and expenses, 600 English phrases with tests. Android shell with home-screen widgets, shortcuts and a "Focus 25" tile. Works offline.',
+      },
+      technologies: ['JavaScript', 'HTML/CSS', 'IndexedDB', 'Android', 'Java'],
+      image: lifeosCover,
+      imageFit: 'contain',
+      inProgress: true,
+      gallery: [lifeosCover, lifeosToday, lifeosTasks, lifeosMoney, lifeosStudy, lifeosClock],
+    },
+    {
+      name: 'Туй — Платформа для свадеб',
+      description: {
+        ru: 'Платформа «Свадьба под ключ»: каталог тойхон и исполнителей, сравнение, «Моя свадьба», чат и отзывы. Кабинет исполнителя с заявками, календарём и финансами, модули кондитера и курьера. Админка с модерацией, спорами и журналом. Вход по номеру телефона.',
+        en: 'Turnkey wedding platform: catalog of venues and vendors, comparison, "My wedding", chat and reviews. Vendor dashboard with requests, calendar and finances, plus confectioner and courier modules. Admin panel with moderation, disputes and an audit log. Phone-number sign-in.',
+      },
+      technologies: ['Next.js', 'React', 'TypeScript', 'Laravel', 'PostgreSQL'],
+      image: tuyPoster,
+      video: tuyMotion,
+      inProgress: true,
+      gallery: [tuyPoster, tuyBuild, tuyCabinet, tuyAdmin],
+    },
+    {
+      name: 'SAFYCLO',
+      description: {
+        ru: 'Платформа дизайнерского дома modest-одежды: интернет-магазин с галереей до 10 фото на товар, студия индивидуального пошива, Kanban-панель производства для цеха и REST API. Цены в сомони, полная адаптация под телефон.',
+        en: 'Platform for a modest-fashion design house: online store with up to 10 photos per item, made-to-measure studio, a Kanban production board for the workshop and a REST API. Prices in somoni, fully responsive.',
+      },
+      technologies: ['Next.js', 'React', 'Tailwind CSS', 'Laravel', 'PHP'],
+      image: safycloBanner,
+      inProgress: true,
+      gallery: [safycloBanner, safycloAbaya, safycloOlive],
     },
   ],
 };
@@ -331,6 +410,9 @@ export const uiTranslations = {
     experience: 'Опыт работы',
     skills: 'Навыки',
     projects: 'Проекты',
+    petProjects: 'Пет-проекты',
+    petProjectsNote: 'Развиваю в свободное время — проекты ещё в работе',
+    inProgress: 'В разработке',
     education: 'Образование',
     languages: 'Языки',
     contact: 'Контакты',
@@ -358,6 +440,9 @@ export const uiTranslations = {
     experience: 'Experience',
     skills: 'Skills',
     projects: 'Projects',
+    petProjects: 'Pet projects',
+    petProjectsNote: 'Built in my spare time — still in progress',
+    inProgress: 'In progress',
     education: 'Education',
     languages: 'Languages',
     contact: 'Contact',

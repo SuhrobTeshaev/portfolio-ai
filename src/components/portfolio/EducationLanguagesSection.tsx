@@ -9,7 +9,7 @@ export function EducationLanguagesSection() {
   const t = uiTranslations[language];
 
   return (
-    <section id="education" className="py-16 ">
+    <section className="py-16 ">
       <div className="container w-full max-w-[1200px] mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-12">
           {/* Education */}
@@ -65,7 +65,7 @@ export function EducationLanguagesSection() {
                   transition={{ delay: index * 0.1 }}
                   className="card-elevated p-4 flex justify-between items-center"
                 >
-                  <span className="font-medium text-foreground">{lang.language}</span>
+                  <span className="font-medium text-foreground">{lang.language[language]}</span>
                   <span className="text-muted-foreground text-sm">{lang.level[language]}</span>
                 </motion.div>
               ))}
